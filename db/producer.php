@@ -47,7 +47,6 @@ if ($result && $result->num_rows > 0) {
     echo "No results found." . PHP_EOL;
 }
 
-
 $mydb->close();
 
 echo "Script execution completed." . PHP_EOL;
