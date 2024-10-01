@@ -34,7 +34,6 @@ if ($result && $result->num_rows > 0) {
             'hashed_password' => $row['hashed_password']
         ];
         
-      
         $response = $rabbitMQ->publish($data);
         
         // checks if message was published successfully

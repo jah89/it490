@@ -23,6 +23,5 @@ function getHostInfo(array $extra = NULL)
     }
     return $machine;
 }
-
 ?>
 
