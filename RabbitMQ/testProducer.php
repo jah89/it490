@@ -29,7 +29,7 @@ $messageBody = json_encode(['type' => 'login', 'username' => 'testUser', 'passwo
 $msg = new AMQPMessage($messageBody, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
 
 //  message to the exchange
-$channel->basic_publish($msg, $authConfig['EXCHANGE'], '');
+$channel->basic_publish($msg, $authConfig['EXCHANGE'], 'login');
 
 
 echo 'Message sent to RabbitMQ!' . PHP_EOL;
