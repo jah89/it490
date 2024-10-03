@@ -167,13 +167,13 @@ Include ports.conf
 	Require all granted
 </Directory>
 
-<Directory /var/www/IT490Fall24rabbitmqphp_example/frontend/src>
+<Directory /var/www/it490/frontend/src>
 	Options Indexes FollowSymLinks
         AllowOverride All
 	Require all granted
 </Directory>
 
-<Directory /var/www/IT490Fall24rabbitmqphp_example>
+<Directory /var/www/it490>
 	Options Indexes FollowSymLinks
         AllowOverride All
 	Require all granted

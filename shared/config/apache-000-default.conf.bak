@@ -9,9 +9,9 @@
 	#ServerName www.example.com
 
 	ServerAdmin webmaster@localhost
-	DocumentRoot /var/www/IT490Fall24rabbitmqphp_example/frontend/src
+	DocumentRoot /var/www/it490/frontend/src
 	
-	<Directory /var/www/IT490Fall24rabbitmqphp_example/frontend/src>
+	<Directory /var/www/it490/frontend/src>
 		Options Indexes FollowSymLinks
         	AllowOverride All
         	Require all granted
