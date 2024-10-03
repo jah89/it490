@@ -5,7 +5,7 @@
 /**
  * Loads login page
  */
-include __DIR__."/Includes/Registration.inc.php";
+include __DIR__."/includes/Registration.inc.php";
 
 Registration::displayRegistration();
 ?>
