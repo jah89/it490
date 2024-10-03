@@ -9,4 +9,6 @@ return array(
     'phpseclib3\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'PhpAmqpLib\\' => array($vendorDir . '/php-amqplib/php-amqplib/PhpAmqpLib'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
+    'NBA\\Frontend\\Src\\' => array('/src'),
+    'NBA\\Frontend\\' => array($baseDir . '/'),
 );

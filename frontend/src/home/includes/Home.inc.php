@@ -1,6 +1,7 @@
 <?php
-//require(__DIR__ . "/../lib/nav.php");
-include(__DIR__.'/../../../rabbit/rabbitMQLib.inc.php');
+
+namespace NBA\Frontend\Src\Home\Includes;
+use NBA\Frontend\Src\Lib\Components\Head;
 
 abstract class Home {
 
@@ -19,8 +20,7 @@ abstract class Home {
     <html lang='en'>
 
         <head>
-            <?php include __DIR__.'/../../lib/components/Head.inc.php';
-            echo Head::displayHead(); ?> 
+            <?php echo Head::displayHead(); ?> 
         </head>
 
         <body>

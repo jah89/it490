@@ -1,8 +1,7 @@
 <?php
+namespace NBA\Frontend\Pages;
 //require(__DIR__ . "/../lib/nav.php");
 require(__DIR__. "/../../lib/sanitizers.php");
-include(__DIR__."/../../rabbit/rabbitMQLib.inc.php");
-
 abstract class Registration {
 
     /**
@@ -86,7 +85,7 @@ abstract class Registration {
                     //echo $hashedPassword;
         
                     $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
-                    $client = new rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+                    $client = new \NBA\Frontend\rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
                     print_r($json_message);
                     if($client->send_request($json_message)) {
                     echo "Message published successfuly:  $json_message";
@@ -95,7 +94,7 @@ abstract class Registration {
                     }
                 }
             } 
-        } catch (Exception $e){
+        } catch (\Exception $e){
             echo ('Error processing registration'.$e->getMessage());
         }
     }

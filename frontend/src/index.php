@@ -1,11 +1,9 @@
 <?php
 /**
  * Initial index page redirects user to landing page.
- *
- * @package NBA\Frontend\Entry
  */
 
-namespace NBA\Frontend;
-
+ namespace NBA\Frontend\Src;
+require (__DIR__.'/../vendor/autoload.php');
 header('Location: /landing');
 exit();

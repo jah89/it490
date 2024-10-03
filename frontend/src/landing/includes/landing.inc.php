@@ -1,6 +1,9 @@
 <?php
 
 //frontend main landing page
+namespace NBA\Frontend\Src\Landing\Includes;
+require __DIR__.'/../../../vendor/autoload.php';
+use NBA\Frontend\Src\Lib\Components\Head;
 
 abstract class Landing {
 
@@ -16,8 +19,12 @@ abstract class Landing {
         <html lang="en">
 
         <head>
-           <?php include __DIR__.'/../../lib/components/Head.inc.php';
-           echo Head::displayHead(); ?> 
+            
+           <?php 
+           //TO DO fix this
+           //$head = new Head();
+           //echo $head->displayHead();
+           var_dump(class_exists('NBA\\Frontend\\Src\\Lib\\Compnents\\Head')); ?> 
 </head>
 
         <body>

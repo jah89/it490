@@ -1,12 +1,15 @@
 <?php
-//require(__DIR__ . "/../lib/nav.php");
+namespace NBA\Frontend\Pages;
 include(__DIR__.'/../../lib/sanitizers.php');
-include(__DIR__.'/../../../rabbit/rabbitMQLib.inc.php');
 
+/**
+ * Class that handles login attempts.
+ * Validates/sanitizes user inputs before passing it to login 
+ * function of SessionHandler class.
+ */
 abstract class Login {
 
-    //private static $session;
-
+    private static false|\NBA\Frontend\Messaging\Session $session;
 
     private static function handleLogin() {
         try{
@@ -38,16 +41,19 @@ abstract class Login {
 
                 if (!$hasError) {
                     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                    $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
-                    $client = new rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
-                    if($client->send_request($json_message)) {
-                        echo "Message published successfuly:  $json_message";
+                    static::$session = \NBA\Frontend\Lib\SessionHandler::login($email, $hashedPassword);
+
+                    if(static::$session) {
+                        header('Location: /home');
+                        exit();
                     } else {
-                        echo "Failed to publish message: $json_message";
+
+                        die("Failed to publish message.");
+
                     }
                 } 
             }
-        }catch(Exception $e){
+        }catch(\Exception $e){
             echo("Error processing login ".$e->getMessage());
         }
     }//end handleLogin()

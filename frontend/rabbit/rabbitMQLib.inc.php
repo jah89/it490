@@ -1,5 +1,5 @@
 <?php
-
+namespace NBA\Frontend\Rabbit;
 require_once('get_host_info.inc.php');
 
 class rabbitMQServer
@@ -75,21 +75,21 @@ class rabbitMQServer
       $params['login'] = $this->USER;
       $params['password'] = $this->PASSWORD;
       $params['vhost'] = $this->VHOST;
-			$conn = new AMQPConnection($params);
+			$conn = new \AMQPConnection($params);
 			$conn->connect();
-			$channel = new AMQPChannel($conn);
-			$exchange = new AMQPExchange($channel);
+			$channel = new \AMQPChannel($conn);
+			$exchange = new \AMQPExchange($channel);
       $exchange->setName($this->clientExchangeName);
       $exchange->setType($this->exchange_type);
 
-			$serverQueue = new AMQPQueue($channel);
+			$serverQueue = new \AMQPQueue($channel);
 			$serverQueue->setName($msg->getReplyTo());
 			$replykey = $this->routing_key.".response";
 			$serverQueue->bind($exchange->getName(),$replykey);
 			$exchange->publish(
 				json_encode($response),
 				$replykey,
-				AMQP_NOPARAM,
+				\AMQP_NOPARAM,
 				array('correlation_id'=>$msg->getCorrelationId())
 			);
 
@@ -104,7 +104,7 @@ class rabbitMQServer
 				echo "processed one-way message\n";
             }
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			// ampq throws exception if get fails...
             echo "error: rabbitMQServer: process_message: exception caught: ".$e;
@@ -131,17 +131,17 @@ class rabbitMQServer
 			//add heartbeat to keep queue active
 			$params['heartbeat'] = 60;
 
-			$conn 				 = new AMQPConnection($params);
+			$conn 				 = new \AMQPConnection($params);
 			$conn->connect();
 
-			$channel = new AMQPChannel($this->$conn);
+			$channel = new \AMQPChannel($this->$conn);
 
-			$exchange = new AMQPExchange($channel);
+			$exchange = new \AMQPExchange($channel);
             $exchange->setName($this->clientExchangeName);
             $exchange->setType($this->exchange_type);
             $exchange->declareExchange();
 
-			$this->serverQueue = new AMQPQueue($channel);
+			$this->serverQueue = new \AMQPQueue($channel);
 			$this->serverQueue->setName($this->serverQueueName);
             //$this->serverQueue->setFlags(AMQP_DURABLE);  // Ensure that the queue is declared as durable
             $this->serverQueue->declareQueue();  // Now declare the queue
@@ -154,7 +154,7 @@ class rabbitMQServer
 				$channel->wait();
 			}
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			trigger_error("Failed to start request processor: ".$e,E_USER_ERROR); 
 		}
@@ -222,7 +222,16 @@ class rabbitMQClient
 		return false;
 	}
 
-	function send_request($message)
+    /**
+     * Sends a request to RabbitMq.
+     *
+     * @param mixed $message Message to send.
+     * @param string $contentType Message MIME type.
+     *
+     * @return mixed Message response.
+     * @throws \Exception Exception on timeout.
+     */
+	function send_request($message, string $contentType = 'text/plain')
 	{
 		$uid = uniqid();
 
@@ -236,16 +245,16 @@ class rabbitMQClient
 		$params['password'] = $this->PASSWORD;
 		$params['vhost'] = $this->VHOST;
 
-		$conn = new AMQPConnection($params);
+		$conn = new \AMQPConnection($params);
 		$conn->connect();
 
-	  	$channel = new AMQPChannel($conn);
+	  	$channel = new \AMQPChannel($conn);
 
-	  	$exchange = new AMQPExchange($channel);
+	  	$exchange = new \AMQPExchange($channel);
       	$exchange->setName($this->serverExchange);
       	$exchange->setType($this->exchange_type);
 
-      	$callback_queue = new AMQPQueue($channel);
+      	$callback_queue = new \AMQPQueue($channel);
       	$callback_queue->setName($this->queue_prefix.".".$uid);
 		$callback_queue->setFlags(\AMQP_AUTODELETE);
       	$callback_queue->declareQueue();
@@ -258,10 +267,10 @@ class rabbitMQClient
 			if (empty($this->serverExchange)) {
 				die("Exchange name is empty. Please set a valid exchange name.\n");
 			}
-			$exchange->publish(
+		$exchange->publish(
 			$message,
 			$this->routing_key,
-			AMQP_NOPARAM,
+			\AMQP_NOPARAM,
 			array('reply_to'=>$callback_queue->getName(),'correlation_id'=>$uid)
 			);
 
@@ -272,7 +281,7 @@ class rabbitMQClient
 			unset($this->responses[$uid]);
 			return $response;
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			die("failed to send message to exchange: ". $e->getMessage()."\n");
 		}
@@ -296,18 +305,18 @@ class rabbitMQClient
       $params['login'] = $this->USER;
       $params['password'] = $this->PASSWORD;
       $params['vhost'] = $this->VHOST;
-			$conn = new AMQPConnection($params);
+			$conn = new \AMQPConnection($params);
 			$conn->connect();
-			$channel = new AMQPChannel($conn);
-			$exchange = new AMQPExchange($channel);
+			$channel = new \AMQPChannel($conn);
+			$exchange = new \AMQPExchange($channel);
       $exchange->setName($this->serverExchange);
       $exchange->setType($this->exchange_type);
-			$this->conn_queue = new AMQPQueue($channel);
+			$this->conn_queue = new \AMQPQueue($channel);
 			$this->conn_queue->setName($this->queue."oneway");
 			$this->conn_queue->bind($exchange->getName(),$this->routing_key);
 			return $exchange->publish($message,$this->routing_key);
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			die("failed to send message to exchange: ". $e->getMessage()."\n");
 		}
