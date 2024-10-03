@@ -31,7 +31,7 @@ abstract class SessionHandler {
             }
 
             $request  = new \NBA\Shared\Messaging\Frontend\SessionValidateRequest($cookieValue);
-            $client     = new rabbitMQClient("host.ini", "testServer");
+            $client     = new rabbitMQClient(__DIR__."/../../rabbit/host.ini", "auth_exchange");
             $response = $request->sendRequest($client);
             if ($response instanceof \NBA\Shared\Messaging\Frontend\SessionValidateResponse) {
                 if ($response->getResult()) {

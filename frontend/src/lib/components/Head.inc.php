@@ -3,7 +3,7 @@
  * Head for all html docs
 */
 
-namespace NBA\Frontend\Lib\Components;
+//namespace NBA\Frontend\Lib\Components;
 
 abstract class Head {
     
@@ -19,7 +19,6 @@ public static function displayHead() {
         <link rel="stylesheet" href="../../css/output.css">
 
         <?php
-
     } //end of displayHead
 } //end of class
 ?>

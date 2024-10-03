@@ -3,8 +3,6 @@
 * User session object.
 */
 
-namespace NBA\Shared;
-
 /**
 * A user's session.
 */

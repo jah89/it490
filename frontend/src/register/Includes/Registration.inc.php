@@ -18,7 +18,7 @@ abstract class Registration {
 
         <head>
             <?php include(__DIR__.'/../../lib/components/Head.inc.php');
-            echo \NBA\Frontend\Lib\Components\Head::displayHead(); ?> 
+            echo Head::displayHead(); ?> 
         </head>
 
         <body>
@@ -86,9 +86,9 @@ abstract class Registration {
                     //echo $hashedPassword;
         
                     $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
-                    $client = new rabbitMQClient("host.ini", "testServer");
+                    $client = new rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
                     print_r($json_message);
-                    if($client->publish($json_message)) {
+                    if($client->send_request($json_message)) {
                     echo "Message published successfuly:  $json_message";
                     } else {
                     echo "Failed to publish message: $json_message";

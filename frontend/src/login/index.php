@@ -1,11 +1,9 @@
 <?php
 
-//namespace NBA\Frontend\Landing\Includes;
-
 /**
  * Loads login page
  */
-include __DIR__."/includes/Login.inc.php";
+include __DIR__.'/Includes/Login.inc.php';
 
 Login::displayLogin();
 ?>

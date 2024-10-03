@@ -1,11 +1,11 @@
 <?php
 //require(__DIR__ . "/../lib/nav.php");
-require(__DIR__."/../../lib/sanitizers.php");
-include(__DIR__."/../../../rabbit/rabbitMQLib.inc.php");
+include(__DIR__.'/../../lib/sanitizers.php');
+include(__DIR__.'/../../../rabbit/rabbitMQLib.inc.php');
 
 abstract class Login {
 
-    private static $session;
+    //private static $session;
 
 
     private static function handleLogin() {
@@ -39,9 +39,8 @@ abstract class Login {
                 if (!$hasError) {
                     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
                     $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
-                    print_r($json_message);
-                    $client = new rabbitMQClient("host.ini", "testServer");
-                    if($client->publish($json_message)) {
+                    $client = new rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+                    if($client->send_request($json_message)) {
                         echo "Message published successfuly:  $json_message";
                     } else {
                         echo "Failed to publish message: $json_message";
@@ -66,8 +65,8 @@ abstract class Login {
     <html lang='en'>
 
         <head>
-            <?php include(__DIR__.'/../../lib/components/Head.inc.php');
-            echo \NBA\Frontend\Lib\Components\Head::displayHead(); ?> 
+            <?php include __DIR__.'/../../lib/components/Head.inc.php';
+            echo Head::displayHead(); ?> 
         </head>
 
         <body>

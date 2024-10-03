@@ -1,7 +1,5 @@
 <?php
 
-namespace NBA\Frontend\Landing;
-
 //frontend main landing page
 
 abstract class Landing {
@@ -18,7 +16,8 @@ abstract class Landing {
         <html lang="en">
 
         <head>
-           <?php echo \NBA\Frontend\Lib\Components\Head::displayHead(); ?> 
+           <?php include __DIR__.'/../../lib/components/Head.inc.php';
+           echo Head::displayHead(); ?> 
 </head>
 
         <body>
