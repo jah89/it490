@@ -3,7 +3,8 @@
  * Loads login page
  */
 
- namespace NBA\Frontend\Pages;
+ namespace nba\src\login;
+ require (__DIR__.'/../../vendor/autoload.php');
 
- Login::displayLogin();
+ includes\Login::displayLogin();
 ?>

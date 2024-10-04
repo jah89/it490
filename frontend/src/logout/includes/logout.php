@@ -1,5 +1,5 @@
 <?php
-namespace NBA\Frontend\Pages;
+namespace nba\fronend\src\logout;
 
 session_start();
 reset_session();

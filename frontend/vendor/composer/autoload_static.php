@@ -15,14 +15,14 @@ class ComposerStaticInitdf0ccbb06c8c17390aaf979e10b626f6
         array (
             'phpseclib3\\' => 11,
         ),
+        'n' => 
+        array (
+            'nba\\' => 4,
+        ),
         'P' => 
         array (
             'PhpAmqpLib\\' => 11,
             'ParagonIE\\ConstantTime\\' => 23,
-        ),
-        'N' => 
-        array (
-            'NBA\\Frontend\\' => 13,
         ),
     );
 
@@ -31,6 +31,10 @@ class ComposerStaticInitdf0ccbb06c8c17390aaf979e10b626f6
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
+        'nba\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/',
+        ),
         'PhpAmqpLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib',
@@ -38,10 +42,6 @@ class ComposerStaticInitdf0ccbb06c8c17390aaf979e10b626f6
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
-        ),
-        'NBA\\Frontend\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/',
         ),
     );
 

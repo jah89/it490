@@ -3,7 +3,7 @@
  * Generic error class related to processing of data
  * that is transmitted through messages(RabbitMQ).
  */
-namespace NBA\Frontend\Messaging;
+namespace nba\shared\messaging;
 
 /**
  * Generic error class related to processing of data

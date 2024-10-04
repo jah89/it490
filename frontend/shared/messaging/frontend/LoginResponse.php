@@ -2,7 +2,7 @@
 /**
  * Contains response from DB processor for a login request.
  */
-namespace NBA\Frontend\Messaging;
+namespace nba\shared\messaging\frontend;
 
 
 /**
@@ -23,16 +23,16 @@ abstract class LoginResponse
      *
      * @var NBA\Shared\Session $session User session object.
      */
-    private Session $session;
+    private \nba\shared\Session $session;
 
 
     /**
      * Creates a new login response.
      *
      * @param boolean              $result  True if succesfully logged in, otherwise false.
-     * @param \JAND\Common\Session $session The session object, defaults to null.
+     * @param Session $session The session object, defaults to null.
      */
-    public function __construct(bool $result, Session $session=null)
+    public function __construct(bool $result, \nba\shared\Session $session=null)
     {
         $this->result  = $result;
         $this->session = $session;
@@ -55,7 +55,7 @@ abstract class LoginResponse
     /**
      * Gets session.
      *
-     * @return NBA\Shared\Session Session object.
+     * @return \nba\shared\Session Session object.
      * 
      */
     public function getSession()

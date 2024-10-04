@@ -4,7 +4,7 @@
  * a session by invalidating session token.
  */
 
- namespace NBA\Frontend\Messaging;
+ namespace nba\shared\messaging\frontend;
 
 
 /**

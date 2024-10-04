@@ -3,7 +3,7 @@
 /**
  * Contains message for frontend request to register new user.
  */
-namespace NBA\Frontend\Messaging;
+namespace nba\shared\messaging\frontend;
 
 /**
  * A request from frontend to register new user.

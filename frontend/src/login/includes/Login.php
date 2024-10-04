@@ -1,5 +1,5 @@
 <?php
-namespace NBA\Frontend\Pages;
+namespace nba\src\login\includes;
 include(__DIR__.'/../../lib/sanitizers.php');
 
 /**
@@ -9,7 +9,7 @@ include(__DIR__.'/../../lib/sanitizers.php');
  */
 abstract class Login {
 
-    private static false|\NBA\Frontend\Messaging\Session $session;
+    private static false|\nba\shared\Session $session;
 
     private static function handleLogin() {
         try{
@@ -41,7 +41,9 @@ abstract class Login {
 
                 if (!$hasError) {
                     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                    static::$session = \NBA\Frontend\Lib\SessionHandler::login($email, $hashedPassword);
+                    static::$session = \nba\src\lib\SessionHandler::login($email, $hashedPassword);
+                    ?>
+                    <?php
 
                     if(static::$session) {
                         header('Location: /home');
@@ -65,14 +67,13 @@ abstract class Login {
     public static function displayLogin() {
 
         self::handleLogin();
-?>
+        ?>
 
     <!DOCTYPE html>
     <html lang='en'>
 
         <head>
-            <?php include __DIR__.'/../../lib/components/Head.inc.php';
-            echo Head::displayHead(); ?> 
+            <?php echo \nba\src\lib\components\Head::displayHead(); ?> 
         </head>
 
         <body>

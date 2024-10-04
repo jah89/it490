@@ -3,7 +3,7 @@
  * Contains request for frontend to 
  * validate session token with db.
  */
-namespace NBA\Frontend\Messaging;
+namespace nba\shared\messaging\frontend;
 
 /**
  * A request from frontend to validate a session token.

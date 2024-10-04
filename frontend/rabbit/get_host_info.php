@@ -1,4 +1,5 @@
 <?php
+namespace nba\rabbit;
 /**
     @brief gets the curent machine information and optionally any other task
     specific INI folder installed in the system path.

@@ -3,8 +3,8 @@
  * Loads login page
  */
 
-namespace NBA\Frontend\Pages;
-
-Registration::displayRegistration();
+namespace nba\src\register;
+require (__DIR__.'/../../vendor/autoload.php');
+includes\Registration::displayRegistration();
 ?>
 

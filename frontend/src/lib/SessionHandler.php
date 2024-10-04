@@ -3,8 +3,8 @@
  * Class that handles sessions on the frontend.
  * Houses the logic behind login/logout attempts.
  */
-namespace NBA\Frontend;
-
+namespace nba\src\lib;
+//require_once __DIR__.'/../../../shared/messaging/frontend/LoginRequest.php';
 /**
  * Class to handle session-related messaging.
  */
@@ -13,7 +13,7 @@ abstract class SessionHandler {
     /**
      * The session object obtained from DB-side logic
      */
-    private static ?\NBA\Frontend\Messaging\Session $session;
+    private static \nba\shared\Session $session;
 
     /** Function to get session object. Checks server-side first,
      * then sends request to DB via Rabbit.
@@ -30,11 +30,11 @@ abstract class SessionHandler {
                 return false;
             }//end if
 
-            $request = new \NBA\Frontend\Messaging\SessionValidateRequest($cookieValue);
-            $rabbitClient = new \NBA\Frontend\rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+            $request = new \nba\shared\messaging\frontend\SessionValidateRequest($cookieValue);
+            $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
             $response = $rabbitClient->send_request($request);
 
-            if($response instanceof \NBA\Frontend\Messaging\SessionValidateResponse) {
+            if($response instanceof \nba\shared\messaging\frontend\SessionValidateResponse) {
                 if ($response->getResult()) {
                     $session = $response->getSession();
 
@@ -70,18 +70,19 @@ abstract class SessionHandler {
     public static function login(string $email, string $hashedPassword) {
 
         $cookieName = 'session_cookie';
-        $request = new \NBA\Frontend\Messaging\LoginRequest($email, $hashedPassword);
-        $rabbitClient = new \NBA\Frontend\rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
-        $response = $rabbitClient->send_request(serialize($request, 'application/php-serialized' ));
+        //include __DIR__.'/../../../shared/messaging/frontend/';
+        $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword);
+        $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+        $response = $rabbitClient->send_request(serialize($request));
 
-        if($response instanceof \NBA\Frontend\Messaging\LoginResponse) {
+        if($response instanceof \nba\shared\messaging\frontend\LoginResponse) {
             if ($response->getResult()){
                 $session = $response->getSession();
                 if (isset($session)){
                     setcookie(
                         $cookieName,
                         $session->getSessionToken(),
-                        $session->getExpirationTimestamp().
+                        $session->getExpirationTimestamp(),
                         '/',
                         $_SERVER['SERVER_NAME'],
                     );

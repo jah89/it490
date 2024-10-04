@@ -1,10 +1,11 @@
 <?php
-namespace NBA\Frontend\Src\Home;
-use NBA\Frontend\Src\Home\Includes\Home;
+namespace nba\src\home;
+require (__DIR__.'/../../vendor/autoload.php');
+
+
 /**
  * Loads login page
  */
-include __DIR__.'/includes/Home.inc.php';
 
-Home::displayHome();
+includes\Home::displayHome();
 ?>

@@ -2,7 +2,8 @@
 /**
  * Head for all html docs
 */
-namespace NBA\Frontend\Lib\Components;
+namespace nba\src\lib\components;
+//require (__DIR__.'/../../vendor/autoload.php');
 
 abstract class Head {
     
@@ -18,6 +19,6 @@ public static function displayHead() {
         <link rel="stylesheet" href="../../css/output.css">
 
         <?php
-    } //end of displayHead
-} //end of class
+    }
+} 
 ?>

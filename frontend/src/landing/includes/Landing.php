@@ -1,8 +1,8 @@
 <?php
 
 //frontend main landing page
-namespace NBA\Frontend\src\landing\includes;
-//use NBA\Frontend\Src\Lib\Components\Head;
+namespace nba\src\landing\includes;
+
 
 abstract class Landing {
 
@@ -19,14 +19,9 @@ abstract class Landing {
 
         <head>
             
-           <?php 
-           //TO DO fix this
-           //$head = new Head();
-           //echo $head->displayHead();
-           //echo \NBA\Frontend\Lib\Components\Head::displayHead();
-           //var_dump(class_exists('NBA\\Frontend\\Src\\Lib\\Components\\Head'));
-           //var_dump(class_exists('NBA\\Frontend\\Src\\Landing\\Includes\\Landing')); ?> 
-
+           <?php //include __DIR__.'/../../lib/components/Head.inc.php';
+           echo \nba\src\lib\components\Head::displayHead();
+            ?>
 </head>
 
         <body>

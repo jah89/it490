@@ -2,7 +2,7 @@
 /**
 * User session object.
 */
-namespace NBA\Frontend\Messaging;
+namespace nba\shared;
 /**
 * A user's session.
 */

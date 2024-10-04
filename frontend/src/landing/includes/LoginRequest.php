@@ -2,12 +2,11 @@
 /**
  * Contains class for frontend to request login.
  */
-namespace NBA\Frontend\Messaging;
-
+namespace nba\src\landing\includes;
  /**
   * Request from frontend to login.
   */
- abstract class LoginRequest extends \NBA\Frontend\Messaging\Request{
+class LoginRequest{
     
     /**
      * Users email.

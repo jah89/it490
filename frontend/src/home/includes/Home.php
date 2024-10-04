@@ -1,7 +1,6 @@
 <?php
 
-namespace NBA\Frontend\Src\Home\Includes;
-use NBA\Frontend\Src\Lib\Components\Head;
+namespace nba\src\home\includes;
 
 abstract class Home {
 
@@ -20,7 +19,8 @@ abstract class Home {
     <html lang='en'>
 
         <head>
-            <?php //echo Head::displayHead(); ?> 
+        <?php echo \nba\src\lib\components\Head::displayHead();
+            ?>
         </head>
 
         <body>

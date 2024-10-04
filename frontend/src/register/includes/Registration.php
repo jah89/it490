@@ -1,5 +1,5 @@
 <?php
-namespace NBA\Frontend\Pages;
+namespace nba\src\register\includes;
 //require(__DIR__ . "/../lib/nav.php");
 require(__DIR__. "/../../lib/sanitizers.php");
 abstract class Registration {
@@ -16,8 +16,7 @@ abstract class Registration {
     <html lang='en'>
 
         <head>
-            <?php include(__DIR__.'/../../lib/components/Head.inc.php');
-            echo Head::displayHead(); ?> 
+            <?php echo \nba\src\lib\components\Head::displayHead(); ?> 
         </head>
 
         <body>
@@ -85,7 +84,7 @@ abstract class Registration {
                     //echo $hashedPassword;
         
                     $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
-                    $client = new \NBA\Frontend\rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+                    $client = new \nba\rabbit\rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
                     print_r($json_message);
                     if($client->send_request($json_message)) {
                     echo "Message published successfuly:  $json_message";
