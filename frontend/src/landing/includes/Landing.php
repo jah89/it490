@@ -1,9 +1,8 @@
 <?php
 
 //frontend main landing page
-namespace NBA\Frontend\Src\Landing\Includes;
-require __DIR__.'/../../../vendor/autoload.php';
-use NBA\Frontend\Src\Lib\Components\Head;
+namespace NBA\Frontend\src\landing\includes;
+//use NBA\Frontend\Src\Lib\Components\Head;
 
 abstract class Landing {
 
@@ -24,7 +23,10 @@ abstract class Landing {
            //TO DO fix this
            //$head = new Head();
            //echo $head->displayHead();
-           var_dump(class_exists('NBA\\Frontend\\Src\\Lib\\Compnents\\Head')); ?> 
+           //echo \NBA\Frontend\Lib\Components\Head::displayHead();
+           //var_dump(class_exists('NBA\\Frontend\\Src\\Lib\\Components\\Head'));
+           //var_dump(class_exists('NBA\\Frontend\\Src\\Landing\\Includes\\Landing')); ?> 
+
 </head>
 
         <body>

@@ -20,7 +20,7 @@ abstract class Home {
     <html lang='en'>
 
         <head>
-            <?php echo Head::displayHead(); ?> 
+            <?php //echo Head::displayHead(); ?> 
         </head>
 
         <body>

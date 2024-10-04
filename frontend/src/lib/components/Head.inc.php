@@ -2,7 +2,7 @@
 /**
  * Head for all html docs
 */
-namespace NBA\Frontend\Src\Lib\Components;
+namespace NBA\Frontend\Lib\Components;
 
 abstract class Head {
     

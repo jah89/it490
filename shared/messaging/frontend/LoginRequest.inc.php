@@ -2,14 +2,13 @@
 /**
  * Contains class for frontend to request login.
  */
-
- namespace NBA\Shared\Messaging\Frontend;
+namespace NBA\Frontend\Messaging;
 
  /**
   * Request from frontend to login.
   */
- abstract class LoginRequest extends \NBA\Shared\Messaging\Request
- {
+ abstract class LoginRequest extends \NBA\Frontend\Messaging\Request{
+    
     /**
      * Users email.
      * @var string $email The user's email addr.
@@ -19,9 +18,9 @@
     /**
      * Users' password.
      * 
-     * @var string $password User's password.
+     * @var string $hashedPassword User's password.
      */
-    private string $password;
+    private string $hashedPassword;
 
     /**
      * Creates new login request.
@@ -29,27 +28,27 @@
      * @param string $email
      * @param string $password
      */
-    public function __construct(string $email, string $password){
+    public function __construct(string $email, string $hashedPassword){
         $this->email = $email;
-        $this->password = $password;
+        $this->hashedPassword = $hashedPassword;
     
     }
 
     /**
      * Function to get user's email.
      *
-     * @return string Uer's email.
+     * @return string User's email.
      */
     public function getEmail(){
         return $this->email;
     }
 
     /**
-     * Function to get user's password.
+     * Function to get user's hashed password.
      *
-     * @return string Uer's password.
+     * @return string User's hashed password.
      */
     public function getPassword(){
-        return $this->password;
+        return $this->hashedPassword;
     }
  }

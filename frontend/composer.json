@@ -1,9 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "NBA\\Frontend\\": "./",
-            "NBA\\Frontend\\Src\\": "/src"
-        }
+            "NBA\\Frontend\\": "./"
+                }
     },
     "require-dev": {
                 "php-amqplib/php-amqplib": "^3.2"

@@ -4,12 +4,12 @@
  *
  */
 
-namespace NBA\Shared\Messaging\Frontend;
+namespace NBA\Frontend\Messaging;
 
 /**
  * A request from the frontend for a session operation. Other classes are based on this.
  */
-abstract class SessionRequest extends \NBA\Shared\Messaging\Frontend\LoginRequest {
+abstract class SessionRequest extends \NBA\Frontend\Messaging\LoginRequest {
 
     /**
      * Session Token from user.

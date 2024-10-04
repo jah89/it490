@@ -4,7 +4,8 @@
  * a session by invalidating session token.
  */
 
-namespace NBA\Shared\Messaging\Frontend;
+ namespace NBA\Frontend\Messaging;
+
 
 /**
  * A request from the frontend to invalidate

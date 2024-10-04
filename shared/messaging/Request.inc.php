@@ -3,7 +3,8 @@
  * Class containing base request.
  */
 
- namespace NBA\Shared\Messaging;
+ namespace NBA\Frontend\Messaging;
+
 
  /**
   * class that is base for requests.
@@ -16,7 +17,8 @@ abstract class Request {
      * @param $client RabbitMQ Client based on rabbitLib file
      * @return Response from broker.
      */
-    public function sendRequest($client){
-        return unserialize($client->sendRequest(serialize($this), 'application/php-serialized'));
-    }
+    //???
+    // public function sendRequest($client){
+    //     return unserialize($client->sendRequest(serialize($this), 'application/php-serialized'));
+    // }
 }

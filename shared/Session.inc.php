@@ -2,7 +2,7 @@
 /**
 * User session object.
 */
-
+namespace NBA\Frontend\Messaging;
 /**
 * A user's session.
 */
@@ -25,9 +25,9 @@ class Session {
     /**
      * Session expiration time using Unix epoch timestamp.
      *
-     * @var string $$sessionExpiration is the timestamp of session expiration.
+     * @var string $expirationTimestamp is the timestamp of session expiration.
      */
-    private string $sessionExpiration;
+    private string $expirationTimestamp;
 
     /**
      * User's ID.
@@ -40,20 +40,20 @@ class Session {
     * Constructor to create a new session.
     *
     * @param string $sessionToken The session token.
-    * @param integer $sessionExpiration Timestamp of expiration.
+    * @param integer $expirationTimestamp Timestamp of session expiration.
     * @param string $UID The user's ID.
     * @param string $username The user's username.
     */
     public function __construct(
         string $sessionToken,
-        int $sessionExpiration,
+        int $expirationTimestamp,
         string $UID,
         string $username
     ) {
         $this->username          = $username;
         $this->UID               = $UID;
         $this->sessionToken      = $sessionToken;
-        $this->sessionExpiration = $sessionExpiration;
+        $this->expirationTimestamp  = $expirationTimestamp;
     } //end of contstructor
 
     //start of getters
@@ -84,9 +84,9 @@ class Session {
      *
      * @return integer Session expiration timestamp.
      */
-    public function getSessionExpiration()
+    public function getExpirationTimestamp()
     {
-        return $this->sessionExpiration;
+        return $this->expirationTimestamp;
 
     }
 

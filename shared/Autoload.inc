@@ -1,6 +1,6 @@
 <?php
 
-//saw this on stackOverflow, it may be useful later on
+//saw this on stackOverflow, it may be useful later on - MG
 
 namespace NBA\Shared;
 

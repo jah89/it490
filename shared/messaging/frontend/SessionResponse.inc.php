@@ -3,7 +3,7 @@
  * Contains response from DB processor to frontend about sessions.
  */
 
-namespace NBA\Shared\Messaging\Frontend;
+ namespace NBA\Frontend\Messaging;
 
 /**
  * Contains response from DB processor to frontend about sessions.

@@ -4,7 +4,7 @@
  * validate a session.
  */
 
-namespace NBA\Shared\Messaging\Frontend;
+ namespace NBA\Frontend\Messaging;
 
 /**
  * A request from the frontend to validate
@@ -17,7 +17,7 @@ class SessionValidateResponse extends SessionResponse
      * 
      * @var ?\NBA\Shared\Session $session The session object.
      */
-    private ?\NBA\Shared\Session $session;
+    private ?\NBA\Frontend\Messaging\Session $session;
 
 
     
@@ -28,7 +28,7 @@ class SessionValidateResponse extends SessionResponse
      *  false if not valid or error.
      * @param \NBA\Shared\Session $session session object.
      */
-    public function __construct(bool $result, ?\NBA\Shared\Session $session=null)
+    public function __construct(bool $result, ?\NBA\Frontend\Messaging\Session $session=null)
     {
         //Parent constructor from SessionResponse
         parent::__construct($result);
