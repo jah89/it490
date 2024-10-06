@@ -7,16 +7,15 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require '../frontend/shared/messaging/frontend/LoginResponse.php';
 require_once 'rabbitMQLib.inc';
-require '../frontend/shared/messaging/frontend/ConcreteLoginResponse.php'; 
 
 use nba\shared\Session;
-use nba\shared\messaging\frontend\ConcreteLoginResponse;
+use nba\shared\messaging\frontend\LoginResponse;
 
 
 $token = uniqid();
 $timestamp = time() + (3 * 3600);
 $session = new Session($token, $timestamp, "bob");
-$loginResponse = new ConcreteLoginResponse(true, $session);
+$loginResponse = new LoginResponse(true, $session);
 
 //$loginResponse = new LoginResponse(true, null);
 
