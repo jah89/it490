@@ -8,7 +8,7 @@ namespace nba\shared\messaging\frontend;
 /**
  * Response from DB processor to login request.
  */
-abstract class LoginResponse
+class LoginResponse
 {
 
     /**

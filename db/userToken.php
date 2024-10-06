@@ -9,7 +9,7 @@ require 'Session.inc.php';
 $token = uniqid();
 $timestamp = time() + (3 * 3600);
 $session = new Session($token, $timestamp, "bob");
-$loginResponse = new ConcreteLoginResponse(true, $session);
+$loginResponse = new LoginResponse(true, $session);
 
 //$loginResponse = new LoginResponse(true, null);
 
