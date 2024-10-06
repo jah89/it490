@@ -1,11 +1,10 @@
 <?php
-
-//namespace NBA\Frontend\Landing\Includes;
-
 /**
  * Loads login page
  */
-include __DIR__."/includes/Login.inc.php";
 
-Login::displayLogin();
+ namespace nba\src\login;
+ require (__DIR__.'/../../vendor/autoload.php');
+
+ includes\Login::displayLogin();
 ?>

@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '34fff0e7fad1917251b5cab066e6ca5fe22509e9',
+        'reference' => 'a86eedca8e9b7d9c9c71fac60c6cd15cc5f96050',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '34fff0e7fad1917251b5cab066e6ca5fe22509e9',
+            'reference' => 'a86eedca8e9b7d9c9c71fac60c6cd15cc5f96050',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -26,7 +26,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/constant_time_encoding',
             'aliases' => array(),
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'paragonie/random_compat' => array(
             'pretty_version' => 'v9.99.100',
@@ -35,7 +35,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/random_compat',
             'aliases' => array(),
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'php-amqplib/php-amqplib' => array(
             'pretty_version' => 'v3.7.1',
@@ -44,7 +44,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../php-amqplib/php-amqplib',
             'aliases' => array(),
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.42',
@@ -53,10 +53,10 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'videlalvaro/php-amqplib' => array(
-            'dev_requirement' => false,
+            'dev_requirement' => true,
             'replaced' => array(
                 0 => 'v3.7.1',
             ),

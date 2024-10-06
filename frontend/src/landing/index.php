@@ -1,12 +1,10 @@
 <?php
-
-//namespace NBA\Frontend\Landing\Includes;
+namespace nba\src\landing;
+require (__DIR__.'/../../vendor/autoload.php');
 
 /**
  * Loads landing page
  */
-include __DIR__."/includes/landing.inc.php";
+includes\Landing::displayLanding();
 
-Landing::displayLanding();
 ?>
- 

@@ -7,7 +7,7 @@ require_once('rabbitMQLib.inc');
 $host = '172.30.17.239';  
 $user = 'miz';           
 $password = 'teamfantasy'; 
-$dbname = 'login_auth';      
+$dbname = 'nba';      
 
 $mydb = new mysqli($host, $user, $password, $dbname);
 

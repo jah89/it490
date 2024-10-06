@@ -322,5 +322,10 @@
         }
     ],
     "dev": true,
-    "dev-package-names": []
+    "dev-package-names": [
+        "paragonie/constant_time_encoding",
+        "paragonie/random_compat",
+        "php-amqplib/php-amqplib",
+        "phpseclib/phpseclib"
+    ]
 }

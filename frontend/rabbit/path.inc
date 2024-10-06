@@ -1,4 +1,5 @@
 <?php
+namespace nba\rabbit;
 $path = '/usr/local/lib/system_libs';
     if (file_exists('local.ini'))
     {
