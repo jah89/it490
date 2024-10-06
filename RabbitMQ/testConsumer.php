@@ -29,6 +29,12 @@ echo " [*] Waiting for messages. To exit press CTRL+C\n";
 $callback = function ($msg) {
     $data = json_decode($msg->body, true);
 
+    // Check if the 'action' key exists in the message
+    if (!isset($data['action'])) {
+        error_log("No 'action' key found in the message");
+        return;
+    }
+
     // Process the message based on the action field
     switch ($data['action']) {
         case 'login':
@@ -43,23 +49,30 @@ $callback = function ($msg) {
             error_log("Unknown action: " . $data['action']);
     }
 
-    
     $msg->ack();
 };
 
-// handle login action
+// Handle login action
 function handleLogin($data) {
-    error_log("Processing login for user: " . $data['username']);
-
+    if (isset($data['username']) && isset($data['password'])) {
+        error_log("Processing login for user: " . $data['username']);
+        // Implement your database logic or further processing here
+    } else {
+        error_log("Invalid login data provided.");
+    }
 }
 
-// handle registration action
+// Handle registration action
 function handleRegistration($data) {
-    error_log("Processing registration for user: " . $data['username']);
-    // Implement your registration logic
+    if (isset($data['username']) && isset($data['password'])) {
+        error_log("Processing registration for user: " . $data['username']);
+        // Implement your registration logic here
+    } else {
+        error_log("Invalid registration data provided.");
+    }
 }
 
-//consumer to listen to the queue
+// Consumer to listen to the queue
 $channel->basic_consume($authConfig['QUEUE'], '', false, true, false, false, $callback);
 
 // Keep the script running 
