@@ -2,29 +2,25 @@
 require 'Session.inc.php';
 
 
-<<<<<<< HEAD
-echo uniqid() . "\n";
-echo time() ."\n";
-
-function makeToken($username)
-{
-$token = uniqid();
-$timestamp = time();
-$session = new Session($username, $token, $timestamp);
-}
-=======
 //echo uniqid() . "\n";
 //echo time() ."\n";
 
 
 $token = uniqid();
-$timestamp = time();
-$session = new Session($username, $token, $timestamp);
+$timestamp = time() + (3 * 3600);
+$session = new Session($token, $timestamp, "bob");
+$loginResponse = new ConcreteLoginResponse(true, $session);
+
+//$loginResponse = new LoginResponse(true, null);
+
+/*
+consuming LoginRequest Object of Rabbit
+
+then use getEMail function to use in session instance  Ex. session = new Session(getEmail(), $token, $timestamp);
 
 
 
 
 
->>>>>>> 75c652daa502738f5397828af55081aa5f1e8a99
 
 ?>
