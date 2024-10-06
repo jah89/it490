@@ -7,16 +7,14 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require '../frontend/shared/messaging/frontend/LoginResponse.php';
 require_once 'rabbitMQLib.inc';
-require '../frontend/shared/messaging/frontend/ConcreteLoginResponse.php'; // Ensure this is included
+require '../frontend/shared/messaging/frontend/ConcreteLoginResponse.php'; 
 
 use nba\shared\Session;
 use nba\shared\messaging\frontend\ConcreteLoginResponse;
 
-//echo uniqid() . "\n";
-//echo time() ."\n";
 
 $token = uniqid();
-$timestamp = time();
+$timestamp = time() + (3 * 3600);
 $session = new Session($token, $timestamp, "bob");
 $loginResponse = new ConcreteLoginResponse(true, $session);
 
@@ -39,18 +37,18 @@ use publish
 // Initialize the RabbitMQ client
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer"); 
 
-// Create the message to send
-//$message = array("action" => "test", "message" => "Hello Rabbit23MQ h4ow are you");
+//$message = array("action" => "test", "message" => "Hello RabbitMQ);
 
 $message = $loginResponse;
 
-// Send the message using the send_request method
+// Sends message using publish method and uses seralize to manage the data
 $response = $client->publish(serialize($message));
 
+/*
 // Display the response
 echo "Received response: \n";
 print_r($response);
 
-
+*/
 
 ?>
