@@ -10,7 +10,6 @@ use PhpAmqpLib\Message\AMQPMessage;
 $config = parse_ini_file(__DIR__ . '/testRabbitMQ.ini', true);
 $authConfig = $config['Authentication'];
 
-// Connection with RabbitMQ
 $connection = new AMQPStreamConnection(
     $authConfig['BROKER_HOST'],
     $authConfig['BROKER_PORT'],
@@ -24,17 +23,9 @@ $channel = $connection->channel();
 // Declare queue based on ini file
 $channel->queue_declare($authConfig['QUEUE'], false, true, false, false);
 
-// Get the query data 
-$requestData = json_decode(file_get_contents('php://input'), true);
-
-$action = isset($_POST['action']) ? $_POST['action'] : (isset($requestData['action']) ? $requestData['action'] : 'login');
-$username = isset($_POST['username']) ? $_POST['username'] : (isset($requestData['username']) ? $requestData['username'] : 'testUser');
-$password = isset($_POST['password']) ? $_POST['password'] : (isset($requestData['password']) ? $requestData['password'] : 'testPass');
-
-if ($action === null || $username === null || $password === null) {
-    echo "No valid data provided!" . PHP_EOL;
-    exit;
-}
+$action = 'login'; // Hardcoding testing
+$username = 'testUser'; 
+$password = 'testPass'; 
 
 // Create message 
 $data = json_encode([
@@ -44,7 +35,7 @@ $data = json_encode([
 ]);
 $msg = new AMQPMessage($data, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
 
-//message the exchange with ini file
+// msg exchange with the routing key 'login'
 $channel->basic_publish($msg, $authConfig['EXCHANGE'], 'login');
 
 echo 'Message sent to RabbitMQ!' . PHP_EOL;

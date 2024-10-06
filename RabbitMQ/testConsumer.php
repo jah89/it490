@@ -20,22 +20,21 @@ $connection = new AMQPStreamConnection(
 );
 $channel = $connection->channel();
 
-// Declare the queue
 $channel->queue_declare($authConfig['QUEUE'], false, true, false, false);
 
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
-// Callback function
+
 $callback = function ($msg) {
     $data = json_decode($msg->body, true);
 
-    // Check if the 'action' key exists in the message
+    // Check if the action key exists 
     if (!isset($data['action'])) {
         error_log("No 'action' key found in the message");
         return;
     }
 
-    // Process the message based on the action field
+    //based on the action field
     switch ($data['action']) {
         case 'login':
             handleLogin($data);
@@ -49,14 +48,13 @@ $callback = function ($msg) {
             error_log("Unknown action: " . $data['action']);
     }
 
-    $msg->ack();
+    $msg->ack(); 
 };
 
 // Handle login action
 function handleLogin($data) {
     if (isset($data['username']) && isset($data['password'])) {
         error_log("Processing login for user: " . $data['username']);
-        // Implement your database logic or further processing here
     } else {
         error_log("Invalid login data provided.");
     }
@@ -66,7 +64,6 @@ function handleLogin($data) {
 function handleRegistration($data) {
     if (isset($data['username']) && isset($data['password'])) {
         error_log("Processing registration for user: " . $data['username']);
-        // Implement your registration logic here
     } else {
         error_log("Invalid registration data provided.");
     }
@@ -75,7 +72,7 @@ function handleRegistration($data) {
 // Consumer to listen to the queue
 $channel->basic_consume($authConfig['QUEUE'], '', false, true, false, false, $callback);
 
-// Keep the script running 
+
 while ($channel->is_consuming()) {
     $channel->wait();
 }
