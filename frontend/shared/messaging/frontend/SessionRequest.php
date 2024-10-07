@@ -6,18 +6,18 @@
 
  namespace nba\shared\messaging\frontend;
 
+use JsonSerializable;
+
 /**
  * A request from the frontend for a session operation. Other classes are based on this.
  */
-abstract class SessionRequest extends \nba\shared\messaging\frontend\LoginRequest {
+abstract class SessionRequest implements JsonSerializable {
 
     /**
-     * Session Token from user.
-     *
-     * @var string $sessionToken Session token
+     * Users email.
+     * @var string $email The user's email addr.
      */
-    private string $sessionToken;
-
+    private string $email;
 
     /**
      * Request type, session request.
@@ -31,24 +31,19 @@ abstract class SessionRequest extends \nba\shared\messaging\frontend\LoginReques
      *
      * @param string $sessionToken session token.
      * */
-    public function __construct(string $sessionToken, string $type)
+    public function __construct(string $type, string $email)
     {
-        $this->sessionToken = $sessionToken;
         $this->type         = $type;
-
+        $this->email        = $email;
     }
 
-
-    /**
-     * Gets the user's session token.
-     *
-     * @return string User's session token.
-     */
-    public function getSessionToken()
+    public function jsonSerialize(): mixed
     {
-        return $this->sessionToken;
-
+        return [
+            'type' => $this->type,
+            'payload' => [
+                'email' => $this->email,
+            ]
+        ];
     }
-
-
-}
+    }

@@ -22,45 +22,42 @@ abstract class SessionHandler {
      */
     public static function getSession(){
 
+        //If no session exists, try to retrieve one and put in a cookie
         if(!isset(static::$session)) {
             $cookieName = 'session_cookie';
-            $cookieValue = ($_COOKIE($cookieName) ?? null);
 
-            if ($cookieValue === null) {
-                return false;
-            }//end if
+        //check for session cookie being set
+        if (!isset($_COOKIE[$cookieName])) {
+            return false; // No cookie found, return false
+        }
 
-            $request = new \nba\shared\messaging\frontend\SessionValidateRequest($cookieValue, 'session_request');
-            $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
-            $response = $rabbitClient->send_request(json_encode($request), 'application/json');
-            $responseData = json_decode($response, true);
-            if($responseData['type'] === 'session_response') {
-                if ($responseData->getResult()) {
-                    $session = new \nba\shared\Session(
-                        $responseData->getToken(),
-                        $responseData->getExpiration(),
-                        $responseData->getUserID(),
-                        $responseData->getEmail()
-                    );
+        $cookieValue = ($_COOKIE($cookieName) ?? null);
+        $expirationTimestamp = $_COOKIE[$cookieName . '_expires'] ?? null;
 
-                    if(isset($session)) {
-                        static::$session = $session;
-                        return $session;
-
-                    }//end if
-                }//end if
-            } else {
-
+        if ($cookieValue === null || $expirationTimestamp === null) {
             return false;
-            
-            }//end if-else
+        }//end if
 
-        } else {
-        
-            return static::$session;
-        
-        }//end if-else
-    }
+        $request = new \nba\shared\messaging\frontend\SessionValidateRequest('validate_request', $cookieValue, $expirationTimestamp);
+        $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+        $response = $rabbitClient->send_request(json_encode($request), 'application/json');
+        $responseData = json_decode($response, true);
+        $responsePayload = $responseData['payload'];
+        if($responseData['type'] === 'login_response' && $responsePayload['result'] === true) {
+            static::$session = new \nba\shared\Session(
+                $responsePayload['token'],
+                $responsePayload['expiration'],
+                $responsePayload['userID'],
+                $responsePayload['email']
+            );
+                return static::$session;
+            } else {
+                return false;
+            }
+        //return session if already set
+        return static::$session;
+        }
+}
 
     /**
      * Sends login request to DB-side via RabbitMQ. 
@@ -81,15 +78,18 @@ abstract class SessionHandler {
         $rabbitClient = new \nba\rabbit\RabbitMQClient($host, "testServer");
         $response = $rabbitClient->send_request(json_encode($request), 'php-serialized');
         $responseData = json_decode($response, true);
-        if($responseData['type'] === 'login_response') {
-            if ($responseData->getResult()) {
-                $session = new \nba\shared\Session(
-                    $responseData->getToken(),
-                    $responseData->getExpiration(),
-                    $responseData->getUserID(),
-                    $responseData->getEmail()
-                );
+        $responsePayload = $responseData['payload'];
 
+        if($responseData['type'] === 'login_response' && $responsePayload['result'] === true) {
+            static::$session = new \nba\shared\Session(
+                $responsePayload['token'],
+                $responsePayload['expiration'],
+                $responsePayload['userID'],
+                $responsePayload['email']
+            );
+        } else {
+            return false;
+        }
                 if (isset($session)){
                     setcookie(
                         $cookieName,
@@ -100,12 +100,8 @@ abstract class SessionHandler {
                     );
                     static::$session = $session;
                     return $session;
-                }
-            }
-        } else {
-
-        return false;
-        
+                } else {
+                    return false;
         }
     }
 }

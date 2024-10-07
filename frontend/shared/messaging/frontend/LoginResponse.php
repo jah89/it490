@@ -76,11 +76,13 @@ abstract class LoginResponse implements JsonSerializable
     {
         return [
             'type'=> $this->type,
+            'payload' => [
             'result'=>$this->result,
             'email'=>$this->email,
             'token'=>$this->sessionToken,
             'timestamp'=> $this->expirationTimestamp,
             'userID'=> $this->userID
+            ]
         ];
     }
     //start of getters
