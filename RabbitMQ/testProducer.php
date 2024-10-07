@@ -1,4 +1,4 @@
-<?php 
+<?php  
 require_once(__DIR__ . '/path.inc');
 require_once(__DIR__ . '/get_host_info.inc');
 require_once(__DIR__ . '/rabbitMQLib.inc');
@@ -10,7 +10,6 @@ use PhpAmqpLib\Message\AMQPMessage;
 $config = parse_ini_file(__DIR__ . '/testRabbitMQ.ini', true);
 $authConfig = $config['Authentication'];
 
-//connection with RabbitMQ
 $connection = new AMQPStreamConnection(
     $authConfig['BROKER_HOST'],
     $authConfig['BROKER_PORT'],
@@ -24,12 +23,19 @@ $channel = $connection->channel();
 // Declare queue based on ini file
 $channel->queue_declare($authConfig['QUEUE'], false, true, false, false);
 
-$requestData = json_decode(file_get_contents('php://input'), true);
+$action = 'login'; // Hardcoding testing
+$username = 'testUser'; 
+$password = 'testPass'; 
+
 // Create message 
-$data = json_encode(['action' => 'query_data', 'query' => $_POST['query']]);
+$data = json_encode([
+    'action' => $action, 
+    'username' => $username, 
+    'password' => $password
+]);
 $msg = new AMQPMessage($data, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
 
-// message to the exchange with ini file
+// msg exchange with the routing key 'login'
 $channel->basic_publish($msg, $authConfig['EXCHANGE'], 'login');
 
 echo 'Message sent to RabbitMQ!' . PHP_EOL;

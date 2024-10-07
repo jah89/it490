@@ -97,7 +97,7 @@ class Session {
      */
     public function getUserId()
     {
-        return $this->UID;
+        //return $this->UID;
 
     }//end getUserId()
 //end getters
