@@ -11,9 +11,9 @@ class Session {
     /**
      * User's username.
      *
-     * @var string $username is User's username.
+     * @var string $email is User's email/username.
      */
-    private string $username;
+    private string $email;
 
     /**
      * User's session token.
@@ -48,9 +48,9 @@ class Session {
         string $sessionToken,
         int $expirationTimestamp,
         string $UID,
-        string $username
+        string $email
     ) {
-        $this->username          = $username;
+        $this->email             = $email;
         $this->UID               = $UID;
         $this->sessionToken      = $sessionToken;
         $this->expirationTimestamp  = $expirationTimestamp;
@@ -62,9 +62,9 @@ class Session {
      *
      * @return string Username.
      */
-    public function getUsername()
+    public function getEmail()
     {
-        return $this->username;
+        return $this->email;
 
     }
 
@@ -89,7 +89,6 @@ class Session {
         return $this->expirationTimestamp;
 
     }
-
 
     /**
      * Gets the user ID.

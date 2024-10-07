@@ -30,13 +30,18 @@ abstract class SessionHandler {
                 return false;
             }//end if
 
-            $request = new \nba\shared\messaging\frontend\SessionValidateRequest($cookieValue);
+            $request = new \nba\shared\messaging\frontend\SessionValidateRequest($cookieValue, 'session_request');
             $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
-            $response = $rabbitClient->send_request($request);
-
-            if($response instanceof \nba\shared\messaging\frontend\SessionValidateResponse) {
-                if ($response->getResult()) {
-                    $session = $response->getSession();
+            $response = $rabbitClient->send_request(json_encode($request), 'application/json');
+            $responseData = json_decode($response, true);
+            if($responseData['type'] === 'session_response') {
+                if ($responseData->getResult()) {
+                    $session = new \nba\shared\Session(
+                        $responseData->getToken(),
+                        $responseData->getExpiration(),
+                        $responseData->getUserID(),
+                        $responseData->getEmail()
+                    );
 
                     if(isset($session)) {
                         static::$session = $session;
@@ -70,14 +75,21 @@ abstract class SessionHandler {
     public static function login(string $email, string $hashedPassword) {
 
         $cookieName = 'session_cookie';
-        //include __DIR__.'/../../../shared/messaging/frontend/';
-        $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword);
-        $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
-        $response = $rabbitClient->send_request(serialize($request));
+        $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword, 'login_request');
+        $host = [];
+        $host = NULL;
+        $rabbitClient = new \nba\rabbit\RabbitMQClient($host, "testServer");
+        $response = $rabbitClient->send_request(json_encode($request), 'php-serialized');
+        $responseData = json_decode($response, true);
+        if($responseData['type'] === 'login_response') {
+            if ($responseData->getResult()) {
+                $session = new \nba\shared\Session(
+                    $responseData->getToken(),
+                    $responseData->getExpiration(),
+                    $responseData->getUserID(),
+                    $responseData->getEmail()
+                );
 
-        if($response instanceof \nba\shared\messaging\frontend\LoginResponse) {
-            if ($response->getResult()){
-                $session = $response->getSession();
                 if (isset($session)){
                     setcookie(
                         $cookieName,

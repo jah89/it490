@@ -9,7 +9,7 @@
 /**
  * A request from the frontend for a session operation. Other classes are based on this.
  */
-abstract class SessionRequest extends \nba\shared\messaging\LoginRequest {
+abstract class SessionRequest extends \nba\shared\messaging\frontend\LoginRequest {
 
     /**
      * Session Token from user.
@@ -20,13 +20,21 @@ abstract class SessionRequest extends \nba\shared\messaging\LoginRequest {
 
 
     /**
+     * Request type, session request.
+     *
+     * @var string $type The request type.
+     */
+    private string $type = 'session_request';
+
+    /**
      * Builds a new session request.
      *
      * @param string $sessionToken session token.
      * */
-    public function __construct(string $sessionToken)
+    public function __construct(string $sessionToken, string $type)
     {
         $this->sessionToken = $sessionToken;
+        $this->type         = $type;
 
     }
 

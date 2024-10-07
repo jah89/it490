@@ -1,6 +1,6 @@
 <?php
 namespace nba\rabbit;
-require_once('get_host_info.php');
+//require_once('get_host_info.php');
 
 /**
  * Professor's client class. The client that sends messages to rabbitMQ.
@@ -16,14 +16,15 @@ class RabbitMQClient
 	private $serverExchange;
 	//private $clientExchange;
 	private $queue;
-	private $queue_prefix;
+	//private $queue_prefix;
 	private $routing_key = '*';
 	private $responses = array();
-	private $exchange_type = "direct";
+	private $exchange_type = "classic";
+	private $auto_delete;
 
-	function __construct($machine, $server = "rabbitMQ")
+	function __construct($machine, $server)
 	{
-		$this->machine 		 = getHostInfo(array($machine));
+		$this->machine 		 = \nba\rabbit\RabbitHostInfo::getHostInfo($machine);
 		$this->BROKER_HOST   = $this->machine[$server]["BROKER_HOST"];
 		$this->BROKER_PORT   = $this->machine[$server]["BROKER_PORT"];
 		$this->USER     	 = $this->machine[$server]["USER"];
@@ -33,14 +34,14 @@ class RabbitMQClient
 		{
 			$this->exchange_type = $this->machine[$server]["EXCHANGE_TYPE"];
 		}
-		// if (isset( $this->machine[$server]["AUTO_DELETE"]))
-		// {
-		// 	$this->auto_delete = $this->machine[$server]["AUTO_DELETE"];
-		// }
+		if (isset( $this->machine[$server]["AUTO_DELETE"]))
+		{
+			$this->auto_delete = $this->machine[$server]["AUTO_DELETE"];
+		}
 		$this->serverExchange = $this->machine[$server]["SERVER_EXCHANGE"];
 		//$this->clientExchange = $this->machine[$server]["CLIENT_EXCHANGE"];
 		$this->queue 		  = $this->machine[$server]["QUEUE"];
-		$this->queue_prefix   = $this->machine[$server]['QUEUE_PREFIX'];
+		//$this->queue_prefix   = $this->machine[$server]['QUEUE_PREFIX'];
 		$this->responses = array();
 	}
 
@@ -72,11 +73,10 @@ class RabbitMQClient
      * @return mixed Message response.
      * @throws \Exception Exception on timeout.
      */
-	function send_request($message, string $contentType = 'text/plain')
+	function send_request($message, string $contentType)
 	{
 		$uid = uniqid();
 
-		//$json_message = json_encode($message);
 		try
 		{
 		$params = array();
@@ -96,10 +96,10 @@ class RabbitMQClient
       	$exchange->setType($this->exchange_type);
 
       	$callback_queue = new \AMQPQueue($channel);
-      	$callback_queue->setName($this->queue_prefix.".".$uid);
+      	$callback_queue->setName($this->queue.".".$uid);
 		$callback_queue->setFlags(\AMQP_AUTODELETE);
-      	$callback_queue->declareQueue();
-		$callback_queue->bind($this->serverExchange,$callback_queue->getName());
+      	$callback_queue->declare();
+		$callback_queue->bind($exchange->getName(),$this->routing_key.".".$uid);
 
 			// $this->response_queue = new AMQPQueue($channel);
 			// $this->conn_queue->setName($this->queue);
@@ -112,7 +112,9 @@ class RabbitMQClient
 			$message,
 			$this->routing_key,
 			\AMQP_NOPARAM,
-			array('reply_to'=>$callback_queue->getName(),'correlation_id'=>$uid)
+			array('content_type'=> $contentType, 
+			'reply_to'=>$callback_queue->getName(),
+			'correlation_id'=>$uid)
 			);
 
       		$this->responses[$uid] = "waiting";
@@ -153,9 +155,9 @@ class RabbitMQClient
       $exchange->setName($this->serverExchange);
       $exchange->setType($this->exchange_type);
 			$this->conn_queue = new \AMQPQueue($channel);
-			$this->conn_queue->setName($this->queue."oneway");
+			$this->conn_queue->setName($this->queue);
 			$this->conn_queue->bind($exchange->getName(),$this->routing_key);
-			return $exchange->publish($message,$this->routing_key);
+			return $exchange->publish($message,$this->routing_key,\AMQP_NOPARAM,['content_type'=>'php-serialized']);
 		}
 		catch(\Exception $e)
 		{

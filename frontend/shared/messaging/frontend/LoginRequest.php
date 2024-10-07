@@ -7,7 +7,7 @@ namespace nba\shared\messaging\frontend;
  /**
   * Request from frontend to login.
   */
-class LoginRequest{
+class LoginRequest extends \nba\shared\Messaging\Request{
     
     /**
      * Users email.
@@ -23,17 +23,33 @@ class LoginRequest{
     private string $hashedPassword;
 
     /**
+     * The type of request, login request.
+     *
+     * @param string $type
+     */
+    private string $type = 'login_request';
+
+    /**
      * Creates new login request.
      * 
      * @param string $email
      * @param string $password
      */
-    public function __construct(string $email, string $hashedPassword){
+    public function __construct(string $email, string $hashedPassword, string $type){
         $this->email = $email;
         $this->hashedPassword = $hashedPassword;
     
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'type' => $this->type,
+            'email' => $this->email,
+            'password' => $this->hashedPassword,
+        ];
+    }
+    
     /**
      * Function to get user's email.
      *
