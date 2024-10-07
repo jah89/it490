@@ -1,6 +1,5 @@
 <?php
 namespace nba\rabbit;
-require_once('get_host_info.inc.php');
 
 class RabbitMQServer
 {
@@ -24,7 +23,7 @@ class RabbitMQServer
 
 	function __construct($machine, $server = "rabbitMQ")
 	{
-		$this->machine 			    = getHostInfo(array($machine));
+		$this->machine 			    = RabbitHostInfo::getHostInfo(array($machine));
 		$this->BROKER_HOST  	    = $this->machine[$server]["BROKER_HOST"];
 		$this->BROKER_PORT  	    = $this->machine[$server]["BROKER_PORT"];
 		$this->USER     		    = $this->machine[$server]["USER"];
@@ -128,6 +127,7 @@ class RabbitMQServer
             $params['login'] 	 = $this->USER;
             $params['password']  = $this->PASSWORD;
             $params['vhost'] 	 = $this->VHOST;
+			
 			//add heartbeat to keep queue active
 			$params['heartbeat'] = 60;
 
