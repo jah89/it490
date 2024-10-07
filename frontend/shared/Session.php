@@ -32,9 +32,9 @@ class Session {
     /**
      * User's ID.
      *
-     * @var string $UID is the ID of user.
+     * @var string $userID is the ID of user.
      */
-    private string $UID;
+    private string $userID;
 
     /**
     * Constructor to create a new session.
@@ -47,11 +47,11 @@ class Session {
     public function __construct(
         string $sessionToken,
         int $expirationTimestamp,
-        string $UID,
+        string $userID,
         string $email
     ) {
         $this->email             = $email;
-        $this->UID               = $UID;
+        $this->userID            = $userID;
         $this->sessionToken      = $sessionToken;
         $this->expirationTimestamp  = $expirationTimestamp;
     } //end of contstructor
@@ -97,7 +97,7 @@ class Session {
      */
     public function getUserId()
     {
-        //return $this->UID;
+        return $this->userID;
 
     }//end getUserId()
 //end getters
