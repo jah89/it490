@@ -104,7 +104,7 @@ class MessageProcessor
             if ($insertQuery->execute()) {
                 // Prepare successful response
                 $this->response = [
-                    'type' => 'login_resonse',
+                    'type' => 'login_response',
                     'status' => 'success',
                     'message' => "Login successful for $email",
                     'session_token' => $token,
