@@ -3,7 +3,7 @@
 function connectDB(){
 
     $host = '172.30.17.239';  
-    $user = 'miz';           
+    $user = 'eait490';           
     $password = 'teamfantasy'; 
     $dbname = 'nba';      
 

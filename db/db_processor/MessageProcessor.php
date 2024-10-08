@@ -3,7 +3,7 @@
  * Class that contains main processor function to call different processors,
  * as well as the processors themselves.
  */
-require_once(__DIR__ . '/../connectDB.php');
+require_once('/home/enisakil/git/it490/db/connectDB.php');
 class MessageProcessor
 {
     /**
@@ -64,9 +64,26 @@ class MessageProcessor
 
         // Connect to the database
         $db = connectDB();
+        if ($db === null) {
+            $this->response = [
+                'type' => 'LoginResponse',
+                'status' => 'error',
+                'message' => 'Database connection failed.'
+            ];
+            return;
+        }
 
-        $email = $payload['email'];
-        $hashedPassword = $payload['hashedPassword'];
+        if(isset($payload['email']) && isset($payload['hashedPassword'])) {
+            $email = $payload['email'];
+            $hashedPassword = $payload['hashedPassword'];
+        } else {
+            $this->response = [
+                'type' => 'LoginResponse',
+                'status' => 'error',
+                'message' => 'Missing email or hashedPassword.'
+            ];
+            return;
+        }
 
         // Prepare the SQL statement to check credentials
         $query = $db->prepare('SELECT * FROM users WHERE email = ? AND hashed_password = ? LIMIT 1');
