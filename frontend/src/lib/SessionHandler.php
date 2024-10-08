@@ -76,7 +76,8 @@ abstract class SessionHandler {
         $host = [];
         $host = NULL;
         $rabbitClient = new \nba\rabbit\RabbitMQClient($host, "testServer");
-        $response = $rabbitClient->send_request(json_encode($request), 'php-serialized');
+        $response = $rabbitClient->send_request(json_encode($request), 'application/json');
+        
         $responseData = json_decode($response, true);
         $responsePayload = $responseData['payload'];
 

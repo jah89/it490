@@ -7,7 +7,7 @@ namespace nba\shared\messaging\frontend;
  /**
   * Request from frontend to login.
   */
-class LoginRequest extends \nba\shared\Messaging\Request{
+class LoginRequest extends \nba\shared\messaging\Request{
     
     /**
      * Users email.
@@ -38,6 +38,7 @@ class LoginRequest extends \nba\shared\Messaging\Request{
     public function __construct(string $email, string $hashedPassword, string $type){
         $this->email = $email;
         $this->hashedPassword = $hashedPassword;
+        $this->type = $type;
     
     }
 
