@@ -1,0 +1,11 @@
+PHP Warning:  Module "amqp" is already loaded in Unknown on line 0
+
+
+PHP Fatal error:  Uncaught TypeError: error_log(): Argument #2 ($message_type) must be of type int, array given in /var/www/it490/db/RabbitMQServer.php:66
+Stack trace:
+#0 /var/www/it490/db/RabbitMQServer.php(66): error_log()
+#1 [internal function]: RabbitMQServer->process_message()
+#2 /var/www/it490/db/RabbitMQServer.php(154): AMQPQueue->consume()
+#3 /var/www/it490/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
+#4 {main}
+  thrown in /var/www/it490/db/RabbitMQServer.php on line 66
