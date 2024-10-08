@@ -63,14 +63,9 @@ class RabbitMQServer
 				// message wants a response, process the request
 				$body = $msg->getBody();
 				$request = json_decode($body, true);
-
-				//debug statement to check request format
-				print_r($request);
-				
+				error_log("request:   $request");;
 				$payload = $request['payload'];
-				
-				//debug statement to check request format
-				print_r($payload);
+				error_log("payload: $payload");
 				if (isset($this->callback))
 				{
 					$response = call_user_func($this->callback, $request, $payload);
@@ -148,7 +143,7 @@ class RabbitMQServer
 			$exchange = new \AMQPExchange($channel);
             $exchange->setName($this->clientExchangeName);
             $exchange->setType($this->exchange_type);
-			$exchange->setFlags(\AMQP_DURABLE | \AMQP_AUTODELETE);
+			$exchange->setFlags(\AMQP_DURABLE);
             $exchange->declareExchange();
 
 			$this->serverQueue = new \AMQPQueue($channel);
