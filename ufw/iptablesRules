@@ -1,2 +1,3 @@
 sudo ufw default deny incoming 
 sudo ufw default deny outgoing
+sudo ufw allow 5672/tcp
