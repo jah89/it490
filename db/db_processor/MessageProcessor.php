@@ -3,6 +3,7 @@
  * Class that contains main processor function to call different processors,
  * as well as the processors themselves.
  */
+require_once(__DIR__ . '/../connectDB.php');
 class MessageProcessor
 {
     /**
@@ -57,18 +58,57 @@ class MessageProcessor
      */
     private function processorLoginRequest($payload)
     {
+
+        // Connect to the database
+        $db = connectDB();
+
         $email = $payload['email'];
         $hashedPassword = $payload['hashedPassword'];
 
-        // Perform login logic here (e.g., check credentials)
-        $loginStatus = "success";  // Assume success for now
+        // Prepare the SQL statement to check credentials
+        $query = $db->prepare('SELECT * FROM users WHERE email = ? AND hashed_password = ? LIMIT 1');
+        $query->bind_param("ss", $email, $hashedPassword);
+        $query->execute();
+        $result = $query->get_result();
 
-        // Prepare the response
-        $this->response = [
-            'type' => 'LoginResponse',
-            'status' => $loginStatus,
-            'message' => "Login successful for $email"
-        ];
+        // Check if the user credentials are valid
+        if ($result->num_rows > 0) {
+            // Authentication successful, generate session token
+            $token = uniqid();
+            $timestamp = time() + (3 * 3600); // Token expiration set to 3 hours
+
+            // Insert session information into the sessions table
+            $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email) VALUES (?, ?, ?)');
+            $insertQuery->bind_param("sis", $token, $timestamp, $email);
+
+            if ($insertQuery->execute()) {
+                // Prepare successful response
+                $this->response = [
+                    'type' => 'LoginResponse',
+                    'status' => 'success',
+                    'message' => "Login successful for $email",
+                    'session_token' => $token,
+                    'expiration_timestamp' => $timestamp
+                ];
+            } else {
+                // Handle insert failure
+                $this->response = [
+                    'type' => 'LoginResponse',
+                    'status' => 'error',
+                    'message' => "Login successful, but failed to create session."
+                ];
+            }
+        } else {
+            // Invalid credentials
+            $this->response = [
+                'type' => 'LoginResponse',
+                'status' => 'error',
+                'message' => "Login failed: Invalid email or password."
+            ];
+        }
+
+        // Close connection
+        $db->close();
     }
 
     /**
@@ -76,16 +116,88 @@ class MessageProcessor
      */
     private function processorRegistrationRequest($payload)
     {
-        $username = $payload['username'];
         $email = $payload['email'];
+        $hashedPassword = $payload['hashedPassword'];
 
-        // Perform registration logic here
+        // Connect to the database
+        $db = connectDB();
 
+        // Check if the email is already registered
+        $query = $db->prepare("SELECT email FROM users WHERE email = ?");
+        if (!$query) {
+            $this->response = [
+                'type' => 'RegistrationResponse',
+                'status' => 'error',
+                'message' => 'Error preparing statement.'
+            ];
+            return;
+        }
+
+        // Bind email parameter
+        $query->bind_param("s", $email);
+
+        // Execute the statement
+        $query->execute();
+
+        // Bind result variable
+        $query->bind_result($existingEmail);
+
+        // If email exists, registration should fail
+    if ($query->fetch()) {
+        $this->response = [
+            'type' => 'RegistrationResponse',
+            'status' => 'failed',
+            'message' => 'Email is already registered.'
+        ];
+
+        // Close the query and the connection
+        $query->close();
+        $db->close();
+        
+        return;
+    }
+
+    // Close the select statement
+    $query->close();
+
+
+    // Prepare an insert statement to register the new user
+    $insertQuery = $db->prepare("INSERT INTO users (email, hashed_password) VALUES (?, ?)");
+    if (!$insertQuery) {
+        $this->response = [
+            'type' => 'RegistrationResponse',
+            'status' => 'error',
+            'message' => 'Error preparing insert statement.'
+        ];
+        return;
+    }
+
+    // Bind the parameters (email, hashed password)
+    $insertQuery->bind_param("ss", $email, $hashedPassword);
+
+    // Execute the insert statement
+    if ($insertQuery->execute()) {
+        // Registration successful
         $this->response = [
             'type' => 'RegistrationResponse',
             'status' => 'success',
-            'message' => "Registration successful for $username"
+            'message' => "Registration successful for $email"
         ];
+    } else {
+        // Registration failed
+        $this->response = [
+            'type' => 'RegistrationResponse',
+            'status' => 'failed',
+            'message' => 'Failed to register the user.'
+        ];
+    }
+
+    // Close the insert statement
+    $insertQuery->close();
+
+    // Close the database connection
+    $db->close();
+
     }
 
     /**
@@ -93,16 +205,53 @@ class MessageProcessor
      */
     private function processorSessionValidation($payload)
     {
-        $username = $payload['username'];
-        $email = $payload['email'];
+       // Retrieve the session token from the payload
+        $sessionToken = $payload['session_token'];
 
-        // Perform registration logic here
+        // Connect to the database
+        $db = connectDB();
 
+        // Prepare a query to check if the session token exists and is valid
+        $query = $db->prepare('SELECT * FROM sessions WHERE session_token = ?');
+        $query->bind_param("s", $sessionToken);
+
+        // Execute the query
+        $query->execute();
+        $result = $query->get_result();
+
+        // Check if the session token exists
+    if ($result->num_rows > 0) {
+        $sessionData = $result->fetch_assoc();
+        $currentTimestamp = time();
+
+        // Check if the session is expired
+        if ($sessionData['timestamp'] > $currentTimestamp) {
+            // Session is valid and not expired
+            $this->response = [
+                'type' => 'SessionValidationResponse',
+                'status' => 'success',
+                'message' => "Session is valid for email: " . $sessionData['email']
+            ];
+        } else {
+            // Session is expired
+            $this->response = [
+                'type' => 'SessionValidationResponse',
+                'status' => 'error',
+                'message' => "Session has expired for token: $sessionToken"
+            ];
+        }
+    } else {
+        // Invalid session token
         $this->response = [
-            'type' => 'RegistrationResponse',
-            'status' => 'success',
-            'message' => "Registration successful for $username"
+            'type' => 'SessionValidationResponse',
+            'status' => 'error',
+            'message' => "Invalid session token: $sessionToken"
         ];
+    }
+
+        // Close the database connection
+        $db->close();
+
     }
 
     /**
