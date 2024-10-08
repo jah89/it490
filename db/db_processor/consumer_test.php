@@ -5,12 +5,12 @@ include(__DIR__.'/../RabbitMQServer.php');
 require_once('MessageProcessor.php');
 
 // Define the callback function that will handle incoming messages
-function messageCallback($request, $payload) {
+function messageCallback($request) {
     // Instantiate the message processor
     $messageProcessor = new MessageProcessor();
     
     // Process the message based on its type (inside the MessageProcessor class)
-    $messageProcessor->call_processor($request, $payload);
+    $messageProcessor->call_processor($request);
     
     // Optionally, return a response if needed
     return $messageProcessor->getResponse();

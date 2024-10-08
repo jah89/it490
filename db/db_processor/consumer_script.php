@@ -17,7 +17,7 @@ function messageCallback($request) {
 }
 
 // Instantiate the RabbitMQServer class, passing in the host configuration
-$rabbitMQServer = new rabbitMQServer(__DIR__.'/../host.ini','testServer');
+$rabbitMQServer = new RabbitMQServer(__DIR__.'/../host.ini','Authentication');
 
 // Start processing requests and pass the callback function for processing messages
 $rabbitMQServer->process_requests('messageCallback');

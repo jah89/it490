@@ -17,5 +17,5 @@ abstract class Request implements JsonSerializable{
    * 
    * @param string $type the Request type.
    */
-  public static string $type;
+  public string $type;
 }

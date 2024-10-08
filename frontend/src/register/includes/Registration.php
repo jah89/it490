@@ -79,14 +79,14 @@ abstract class Registration {
                     $hasError = true;
                 }
                 if (!$hasError) {
-                    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                     //echo $password;
                     //echo $hashedPassword;
         
                     $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
                     $client = new \nba\rabbit\rabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
                     print_r($json_message);
-                    if($client->send_request($json_message)) {
+                    if($client->send_request($json_message, 'register_request')) {
                     echo "Message published successfuly:  $json_message";
                     } else {
                     echo "Failed to publish message: $json_message";

@@ -29,10 +29,11 @@ class MessageProcessor
      */
     public function call_processor($request)
     {
-        echo $request;
+        print_r($request);
         $payload = $request['payload'];
         switch ($request['type']) {
             case 'login_request':
+                echo("login request received");
                 $this->processorLoginRequest($payload);
                 break;
 
@@ -86,7 +87,7 @@ class MessageProcessor
             if ($insertQuery->execute()) {
                 // Prepare successful response
                 $this->response = [
-                    'type' => 'LoginResponse',
+                    'type' => 'login_resonse',
                     'status' => 'success',
                     'message' => "Login successful for $email",
                     'session_token' => $token,
@@ -95,7 +96,7 @@ class MessageProcessor
             } else {
                 // Handle insert failure
                 $this->response = [
-                    'type' => 'LoginResponse',
+                    'type' => 'login_response',
                     'status' => 'error',
                     'message' => "Login successful, but failed to create session."
                 ];
@@ -103,7 +104,7 @@ class MessageProcessor
         } else {
             // Invalid credentials
             $this->response = [
-                'type' => 'LoginResponse',
+                'type' => 'login_response',
                 'status' => 'error',
                 'message' => "Login failed: Invalid email or password."
             ];
@@ -128,7 +129,7 @@ class MessageProcessor
         $query = $db->prepare("SELECT email FROM users WHERE email = ?");
         if (!$query) {
             $this->response = [
-                'type' => 'RegistrationResponse',
+                'type' => 'register_response',
                 'status' => 'error',
                 'message' => 'Error preparing statement.'
             ];
@@ -147,7 +148,7 @@ class MessageProcessor
         // If email exists, registration should fail
     if ($query->fetch()) {
         $this->response = [
-            'type' => 'RegistrationResponse',
+            'type' => 'register_response',
             'status' => 'failed',
             'message' => 'Email is already registered.'
         ];
@@ -167,7 +168,7 @@ class MessageProcessor
     $insertQuery = $db->prepare("INSERT INTO users (email, hashed_password) VALUES (?, ?)");
     if (!$insertQuery) {
         $this->response = [
-            'type' => 'RegistrationResponse',
+            'type' => 'register_response',
             'status' => 'error',
             'message' => 'Error preparing insert statement.'
         ];
@@ -181,14 +182,14 @@ class MessageProcessor
     if ($insertQuery->execute()) {
         // Registration successful
         $this->response = [
-            'type' => 'RegistrationResponse',
+            'type' => 'register_response',
             'status' => 'success',
             'message' => "Registration successful for $email"
         ];
     } else {
         // Registration failed
         $this->response = [
-            'type' => 'RegistrationResponse',
+            'type' => 'register_response',
             'status' => 'failed',
             'message' => 'Failed to register the user.'
         ];

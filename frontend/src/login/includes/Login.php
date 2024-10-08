@@ -40,7 +40,7 @@ abstract class Login {
                 }
 
                 if (!$hasError) {
-                    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                     static::$session = \nba\src\lib\SessionHandler::login($email, $hashedPassword);
                     ?>
                     <?php
