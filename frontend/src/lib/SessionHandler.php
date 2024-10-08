@@ -79,7 +79,7 @@ abstract class SessionHandler {
         $rabbitClient = new \nba\rabbit\RabbitMQClient($host, "Authentication");
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
         
-        //$responseData = json_decode($response, true);
+        $responseData = json_decode($response, true);
         $responseData = $response;
         print_r($responseData);
         $responsePayload = $responseData['payload'];

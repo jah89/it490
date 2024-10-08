@@ -24,7 +24,7 @@ class RabbitMQClient
 
 	function __construct($machine, $server)
 	{
-		$this->machine 		 = \nba\rabbit\RabbitHostInfo::getHostInfo($machine);
+		$this->machine 		 = \nba\rabbit\RabbitHostInfo::getHostInfo(array($machine));
 		$this->BROKER_HOST   = $this->machine[$server]["BROKER_HOST"];
 		$this->BROKER_PORT   = $this->machine[$server]["BROKER_PORT"];
 		$this->USER     	 = $this->machine[$server]["USER"];
