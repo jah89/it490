@@ -9,7 +9,7 @@ else
 fi
 
 # Step 2: Run the PHP consumer script
-CONSUMER_SCRIPT_PATH="./consumer_script.php"
+CONSUMER_SCRIPT_PATH="./consumer_test.php"
 
 # Run the consumer script in the background, and redirect logs to a file
 # Optionally, use 'nohup' to ensure the process keeps running even after you log out

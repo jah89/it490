@@ -75,10 +75,13 @@ abstract class SessionHandler {
         $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword, 'login_request');
         $host = [];
         $host = NULL;
+        //print_r($request);
         $rabbitClient = new \nba\rabbit\RabbitMQClient($host, "Authentication");
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
         
-        $responseData = json_decode($response, true);
+        //$responseData = json_decode($response, true);
+        $responseData = $response;
+        print_r($responseData);
         $responsePayload = $responseData['payload'];
 
         if($responseData['type'] === 'login_response' && $responsePayload['result'] === true) {
