@@ -17,3 +17,5 @@ nohup php $CONSUMER_SCRIPT_PATH > consumer_log.txt 2>&1 &
 
 # Print a message to indicate that the consumer is running
 echo "RabbitMQ consumer script started. Check 'consumer_log.txt' for logs."
+
+# To kill the script use <pkill -f '/path/to/consumer_script.php'> in your terminal

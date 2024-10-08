@@ -23,19 +23,12 @@ class LoginRequest extends \nba\shared\messaging\Request{
     private string $hashedPassword;
 
     /**
-     * The type of request, login request.
-     *
-     * @param string $type
-     */
-    private string $type = 'login_request';
-
-    /**
      * Creates new login request.
      * 
      * @param string $email
      * @param string $password
      */
-    public function __construct(string $email, string $hashedPassword, string $type){
+    public function __construct(string $email, string $hashedPassword, string $type = 'login_request'){
         $this->email = $email;
         $this->hashedPassword = $hashedPassword;
         $this->type = $type;

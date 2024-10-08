@@ -53,7 +53,7 @@ abstract class SessionResponse implements JsonSerializable
      *
      * @param boolean $result True for validation, false if not valid or there is an error.
      */
-    public function __construct(string $type, bool $result, string $email, string $sessionToken, int $expirationTimestamp)
+    public function __construct(string $type='session_response', bool $result, string $email, string $sessionToken, int $expirationTimestamp)
     {
         $this->type = $type;
         $this->result = $result;

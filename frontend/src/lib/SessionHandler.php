@@ -88,6 +88,7 @@ abstract class SessionHandler {
                 $responsePayload['userID'],
                 $responsePayload['email']
             );
+            $session = static::$session;
         } else {
             return false;
         }
@@ -99,7 +100,7 @@ abstract class SessionHandler {
                         '/',
                         $_SERVER['SERVER_NAME'],
                     );
-                    static::$session = $session;
+                    
                     return $session;
                 } else {
                     return false;

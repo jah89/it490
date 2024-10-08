@@ -31,7 +31,7 @@ abstract class SessionRequest implements JsonSerializable {
      *
      * @param string $sessionToken session token.
      * */
-    public function __construct(string $type, string $email)
+    public function __construct(string $type='session_request', string $email)
     {
         $this->type         = $type;
         $this->email        = $email;

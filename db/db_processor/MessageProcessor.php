@@ -27,8 +27,10 @@ class MessageProcessor
      *              and nested payload array.
      * @param array $payload The decoded message body.
      */
-    public function call_processor($request, $payload)
+    public function call_processor($request)
     {
+        echo $request;
+        $payload = $request['payload'];
         switch ($request['type']) {
             case 'login_request':
                 $this->processorLoginRequest($payload);

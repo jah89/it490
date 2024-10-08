@@ -22,7 +22,7 @@ class SessionValidateRequest  extends SessionRequest
      *
      * @var string $type The request type.
      */
-    private string $type = 'validate_request';
+    private string $type;
 
 
     /**
@@ -38,7 +38,7 @@ class SessionValidateRequest  extends SessionRequest
      *
      * @param boolean $result True for validation, false if not valid or there is an error.
      */
-    public function __construct(string $type, string $sessionToken, int $expirationTimestamp)
+    public function __construct(string $type= 'validate_request', string $sessionToken, int $expirationTimestamp)
     {
         $this->type = $type;
         $this->sessionToken = $sessionToken;

@@ -10,4 +10,5 @@ namespace nba\shared\messaging\frontend;
  */
 class RegisterRequest extends LoginRequest {
     //Everything is the same in request for now.
+    public string $type = 'register_request';
 }

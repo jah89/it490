@@ -50,7 +50,7 @@ abstract class Login {
                         exit();
                     } else {
 
-                        die("Failed to publish message.");
+                        die("Failed to publish login request message.");
 
                     }
                 } 

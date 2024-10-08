@@ -61,7 +61,7 @@ abstract class LoginResponse implements JsonSerializable
      * @param boolean              $result  True if succesfully logged in, otherwise false.
      * @param Session $session The session object, defaults to null.
      */
-    public function __construct(bool $result, string $type, string $email, string $sessionToken, int $expirationTimestamp, int $userID)
+    public function __construct(bool $result, string $type = 'login_response', string $email, string $sessionToken, int $expirationTimestamp, int $userID)
     {
         $this->result  = $result;
         $this->type = $type;
