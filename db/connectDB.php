@@ -15,5 +15,6 @@ function connectDB(){
     }
 
     echo "Successfully connected to database." . PHP_EOL;
+    return $mydb; // Return the connection
 }
 ?>

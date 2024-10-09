@@ -1,72 +1,7 @@
 
 
-PHP Fatal error:  Failed to start request processor: AMQPException: Library error: heartbeat timeout, connection closed in /home/enisakil/git/it490/db/RabbitMQServer.php:154
+PHP Fatal error:  Failed to start request processor: AMQPConnectionException: Socket error: could not connect to host. in /home/enisakil/git/it490/db/RabbitMQServer.php:139
 Stack trace:
-#0 /home/enisakil/git/it490/db/RabbitMQServer.php(154): AMQPQueue->consume()
-#1 /home/enisakil/git/it490/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
-#2 {main} in /home/enisakil/git/it490/db/RabbitMQServer.php on line 164
-
-
-)
-login request receivedSuccessfully connected to database.
-PHP Warning:  Array to string conversion in /home/enisakil/git/it490/db/RabbitMQServer.php on line 66
-request:   Array
-PHP Warning:  Array to string conversion in /home/enisakil/git/it490/db/RabbitMQServer.php on line 68
-payload: Array
-Array
-(
-    [type] => login_request
-    [payload] => Array
-        (
-            [email] => test88@test.com
-            [password] => $2y$10$0XkNRg0KQQ0BExdlraMPEOBkivk9H/N.5LWxWVKuPticfkFpwINXG
-        )
-
-)
-login request receivedSuccessfully connected to database.
-PHP Warning:  Array to string conversion in /home/enisakil/git/it490/db/RabbitMQServer.php on line 66
-request:   Array
-PHP Warning:  Array to string conversion in /home/enisakil/git/it490/db/RabbitMQServer.php on line 68
-payload: Array
-Array
-(
-    [type] => login_request
-    [payload] => Array
-        (
-            [email] => heyitworks@test.com
-            [password] => $2y$10$Ld1qlI0GNn9pGPLilzYQ8Oi7sAHJRdZvfAoUvR/1.q2aXjUUleCO6
-        )
-
-)
-login request receivedSuccessfully connected to database.
-PHP Warning:  Array to string conversion in /home/enisakil/git/it490/db/RabbitMQServer.php on line 66
-request:   Array
-PHP Warning:  Undefined array key "payload" in /home/enisakil/git/it490/db/RabbitMQServer.php on line 67
-payload: 
-Array
-(
-    [username] => doesitwork@test.com
-    [password] => $2y$10$gl5jk5QOaqIs3DnNrYtosO3SJPYA8xwR85NWMV.o2Lc4OoW4Sjq.O
-)
-PHP Warning:  Undefined array key "payload" in /home/enisakil/git/it490/db/db_processor/MessageProcessor.php on line 33
-PHP Warning:  Undefined array key "type" in /home/enisakil/git/it490/db/db_processor/MessageProcessor.php on line 34
-PHP Warning:  Undefined array key "type" in /home/enisakil/git/it490/db/db_processor/MessageProcessor.php on line 54
-Unknown request type: 
-PHP Warning:  Array to string conversion in /home/enisakil/git/it490/db/RabbitMQServer.php on line 66
-request:   Array
-PHP Warning:  Undefined array key "payload" in /home/enisakil/git/it490/db/RabbitMQServer.php on line 67
-payload: 
-Array
-(
-    [username] => doesitwork@test.com
-    [password] => $2y$10$vfrs5UTQRUJrlBWkKHQ3O.0p5v1PXxNPBOP2.EwnBtxX1Vio5gqu.
-)
-PHP Warning:  Undefined array key "payload" in /home/enisakil/git/it490/db/db_processor/MessageProcessor.php on line 33
-PHP Warning:  Undefined array key "type" in /home/enisakil/git/it490/db/db_processor/MessageProcessor.php on line 34
-PHP Warning:  Undefined array key "type" in /home/enisakil/git/it490/db/db_processor/MessageProcessor.php on line 54
-Unknown request type: 
-PHP Fatal error:  Failed to start request processor: AMQPException: Library error: heartbeat timeout, connection closed in /home/enisakil/git/it490/db/RabbitMQServer.php:154
-Stack trace:
-#0 /home/enisakil/git/it490/db/RabbitMQServer.php(154): AMQPQueue->consume()
+#0 /home/enisakil/git/it490/db/RabbitMQServer.php(139): AMQPConnection->connect()
 #1 /home/enisakil/git/it490/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
 #2 {main} in /home/enisakil/git/it490/db/RabbitMQServer.php on line 164

@@ -63,9 +63,9 @@ class RabbitMQServer
 				// message wants a response, process the request
 				$body = $msg->getBody();
 				$request = json_decode($body, true);
-				error_log("request:   $request");;
+				error_log("request:   " . json_encode($request));
 				$payload = $request['payload'];
-				error_log("payload: $payload");
+				error_log("payload: " . json_encode($payload));
 				if (isset($this->callback))
 				{
 					$response = call_user_func($this->callback, $request, $payload);
