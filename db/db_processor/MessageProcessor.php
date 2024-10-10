@@ -33,23 +33,22 @@ class MessageProcessor
     public function call_processor($request)
     {
         print_r($request);
-        $payload = $request['payload'];
         switch ($request['type']) {
             case 'login_request':
                 echo("login request received");
-                $this->processorLoginRequest($payload);
+                $this->processorLoginRequest($request);
                 break;
 
-            case 'registration_request':
-                $this->processorRegistrationRequest($payload);
+            case 'register_request':
+                $this->processorRegistrationRequest($request);
                 break;
 
             case 'validate_session':
-                $this->processorSessionValidation($payload);
+                $this->processorSessionValidation($request);
                 break;
 
             case 'search_request':
-                $this->processorSearchRequest($payload);
+                $this->processorSearchRequest($request);
                 break;
 
             default:
@@ -62,7 +61,7 @@ class MessageProcessor
     /**
      * Process LoginRequest message.
      */
-    private function processorLoginRequest($payload)
+    private function processorLoginRequest($request)
     {
 
         // Connect to the database
@@ -78,10 +77,13 @@ class MessageProcessor
         }
         echo "Database connection successful.\n";
 
-        if(isset($payload['email']) && isset($payload['hashedPassword'])) {
-            $email = $payload['email'];
-            $hashedPassword = $payload['hashedPassword'];
+        echo (print_r($request));
+        if(isset($request['email']) && isset($request['password'])) {
+            $email = $request['email'];
+            $hashedPassword = $request['password'];
+            echo "Set Email and Password\n";
         } else {
+            echo "Failed to set email and password.\n";
             $this->response = [
                 'type' => 'LoginResponse',
                 'status' => 'error',
@@ -125,35 +127,32 @@ class MessageProcessor
                 // Prepare successful response
                 $this->response = [
                     'type' => 'login_response',
-                    'payload'=> [
                     'result' => 'true',
                     'message' => "Login successful for $email",
                     'email' => $email,
                     'session_token' => $token,
                     'expiration_timestamp' => $timestamp
                     ]
-                ];
+                ;
             } else {
                 echo "Failed to insert session information: " . $db->error . "\n";
                 // Handle insert failure
                 $this->response = [
                     'type' => 'login_response',
-                    'payload'=>[
                     'result' => 'false',
                     'message' => "Login successful, but failed to create session."
                     ]
-                ];
+                ;
             }
         } else {
             echo "Login failed: Invalid email or password.\n";
             // Invalid credentials
             $this->response = [
                 'type' => 'login_response',
-                'payload'=> [
                 'status' => 'false',
                 'message' => "Login failed: Invalid email or password."
                 ]
-            ];
+            ;
         }
 
         // Close connection
@@ -163,11 +162,11 @@ class MessageProcessor
     /**
      * Process RegistrationRequest message.
      */
-    private function processorRegistrationRequest($payload)
+    private function processorRegistrationRequest($request)
     {
         echo "Starting registration process...\n";
-        $email = $payload['email'];
-        $hashedPassword = $payload['hashedPassword'];
+        $email = $request['email'];
+        $hashedPassword = $request['password'];
 
         // Connect to the database
         echo "Connecting to the database...\n";
@@ -184,11 +183,10 @@ class MessageProcessor
             echo "Failed to prepare query: " . $db->error . "\n";
             $this->response = [
                 'type' => 'register_response',
-                'payload'=>[
                 'result' => 'false',
                 'message' => 'Error preparing statement.'
                 ]
-            ];
+            ;
             return;
         }
 
@@ -206,11 +204,10 @@ class MessageProcessor
         echo "Email is already registered: $email\n";
         $this->response = [
             'type' => 'register_response',
-            'payload'=>[
             'result' => 'false',
             'message' => 'Email is already registered.'
             ]
-        ];
+            ;
 
         // Close the query and the connection
         $query->close();
@@ -230,11 +227,10 @@ class MessageProcessor
         echo "Failed to prepare insert query: " . $db->error . "\n";
         $this->response = [
             'type' => 'register_response',
-            'payload'=>[
             'result' => 'false',
             'message' => 'Error preparing insert statement.'
             ]
-        ];
+        ;
         return;
     }
 
@@ -247,21 +243,19 @@ class MessageProcessor
         // Registration successful
         $this->response = [
             'type' => 'register_response',
-            'payload'=>[
             'result' => 'true',
             'message' => "Registration successful for $email"
             ]
-        ];
+        ;
     } else {
         echo "Failed to register the user: " . $db->error . "\n";
         // Registration failed
         $this->response = [
             'type' => 'register_response',
-            'payload'=>[
             'result' => 'false',
             'message' => 'Failed to register the user.'
             ]
-        ];
+        ;
     }
 
     // Close the insert statement
@@ -275,10 +269,10 @@ class MessageProcessor
     /**
      * Process SessionValidation request.
      */
-    private function processorSessionValidation($payload)
+    private function processorSessionValidation($request)
     {
        // Retrieve the session token from the payload
-        $sessionToken = $payload['session_token'];
+        $sessionToken = $request['session_token'];
 
         // Connect to the database
         $db = connectDB();
@@ -329,7 +323,7 @@ class MessageProcessor
     /**
      * Process SearchRequest message.
      */
-    private function processorSearchRequest($payload)
+    private function processorSearchRequest($request)
     {
 
         // Perform search logic here
