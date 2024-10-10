@@ -105,7 +105,7 @@ class RabbitMQClient
 			$callback_queue->declare();
 			$callback_queue->bind($exchange->getName(),$this->routing_key.".".$uid);
 
-			$this->conn_queue = new AMQPQueue($channel);
+			$this->conn_queue = new \AMQPQueue($channel);
 			$this->conn_queue->setName($this->queue);
 			$this->conn_queue->bind($exchange->getName(),$this->routing_key);
 
@@ -142,7 +142,7 @@ class RabbitMQClient
 	* @param message the body of the request.  This must make sense to the
 	*server
 	 */
-	function oneway_publish($message)
+	function publish($message)
 	{
 		$json_message = new \AMQPMessage($message);
 		try

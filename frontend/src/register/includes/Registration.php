@@ -79,11 +79,15 @@ abstract class Registration {
                     $hasError = true;
                 }
                 if (!$hasError) {
-                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $salt = '$2y$10$';
+
+                    // Hash the password with the specified salt using bcrypt
+                    $hashedPassword = crypt($password, $salt);
                     //echo $password;
                     //echo $hashedPassword;
         
-                    $json_message = json_encode(['username' => $email, 'password' => $hashedPassword]);
+                    $json_message = json_encode(['type'=>'register_request', 'email' => $email, 'password' => $hashedPassword]);
                     $client = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
                     //print_r($json_message);
                     if($client->send_request($json_message, 'register_request')) {

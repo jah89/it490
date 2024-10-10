@@ -41,9 +41,7 @@ abstract class SessionRequest implements JsonSerializable {
     {
         return [
             'type' => $this->type,
-            'payload' => [
-                'email' => $this->email,
-            ]
+            'email' => $this->email
         ];
     }
     }

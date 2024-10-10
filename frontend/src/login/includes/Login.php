@@ -40,7 +40,11 @@ abstract class Login {
                 }
 
                 if (!$hasError) {
-                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $salt = '$2y$10$';
+
+                    // Hash the password with the specified salt using bcrypt
+                    $hashedPassword = crypt($password, $salt);
                     static::$session = \nba\src\lib\SessionHandler::login($email, $hashedPassword);
                     ?>
                     <?php
@@ -50,7 +54,7 @@ abstract class Login {
                         exit();
                     } else {
 
-                        die("Failed to publish login request message.");
+                        die("Failed to process login request.");
 
                     }
                 } 

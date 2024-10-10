@@ -73,23 +73,18 @@ abstract class SessionHandler {
 
         $cookieName = 'session_cookie';
         $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword, 'login_request');
-        $host = [];
-        $host = NULL;
-        //print_r($request);
-        $rabbitClient = new \nba\rabbit\RabbitMQClient($host, "Authentication");
+        error_log(print_r($request,true));
+        $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../rabbit/host.ini', "Authentication");
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
         
-        $responseData = json_decode($response, true);
-        $responseData = $response;
-        print_r($responseData);
-        $responsePayload = $responseData['payload'];
+        //$responseData = json_decode($response, true);
 
-        if($responseData['type'] === 'login_response' && $responsePayload['result'] === true) {
+        if($response['type'] === 'login_response' && $response['result'] === true) {
             static::$session = new \nba\shared\Session(
-                $responsePayload['token'],
-                $responsePayload['expiration'],
-                $responsePayload['userID'],
-                $responsePayload['email']
+                $response['token'],
+                $response['expiration'],
+                $response['userID'],
+                $response['email']
             );
 
         } else {

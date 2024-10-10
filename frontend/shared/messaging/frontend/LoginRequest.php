@@ -39,10 +39,8 @@ class LoginRequest extends \nba\shared\messaging\Request{
     {
         return [
             'type' => $this->type,
-            'payload' => [
             'email' => $this->email,
             'password' => $this->hashedPassword,
-            ]
         ];
     }
     
