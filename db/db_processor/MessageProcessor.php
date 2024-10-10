@@ -101,8 +101,8 @@ class MessageProcessor
             $timestamp = time() + (3 * 3600); // Token expiration set to 3 hours
 
             // Insert session information into the sessions table
-            $insertQuery = $db->prepare('INSERT INTO sessions VALUES (?, ?, ?)');
-            $insertQuery->bind_param("sis", $token, $timestamp, $email);
+            $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email, user_id) VALUES (?, ?, ?, ?)');
+            $insertQuery->bind_param("sisi", $token, $timestamp, $email, $user_id);
 
             if ($insertQuery->execute()) {
                 // Prepare successful response
