@@ -66,6 +66,7 @@ class MessageProcessor
     {
 
         // Connect to the database
+        echo "Connecting to the database...\n";
         $db = connectDB();
         if ($db === null) {
             $this->response = [
@@ -75,6 +76,7 @@ class MessageProcessor
             ];
             return;
         }
+        echo "Database connection successful.\n";
 
         if(isset($payload['email']) && isset($payload['hashedPassword'])) {
             $email = $payload['email'];
@@ -90,21 +92,36 @@ class MessageProcessor
 
         // Prepare the SQL statement to check credentials
         $query = $db->prepare('SELECT * FROM users WHERE email = ? AND hashed_password = ? LIMIT 1');
+        if (!$query) {
+            echo "Failed to prepare the query: " . $db->error . "\n";
+            return;
+        }
         $query->bind_param("ss", $email, $hashedPassword);
         $query->execute();
         $result = $query->get_result();
+        if (!$result) {
+            echo "Query execution failed: " . $db->error . "\n";
+            return;
+        }
         $num_rows = mysqli_num_rows($result);
+        echo "Number of rows found: " . $num_rows . "\n";
         // Check if the user credentials are valid
         if ($num_rows > 0) {
+            echo "Login successful. Preparing to insert session information.\n";
             // Authentication successful, generate session token
             $token = uniqid();
             $timestamp = time() + (3 * 3600); // Token expiration set to 3 hours
 
             // Insert session information into the sessions table
-            $insertQuery = $db->prepare('INSERT INTO sessions VALUES (?, ?, ?)');
-            $insertQuery->bind_param("sis", $token, $timestamp, $email);
+            $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email, user_id) VALUES (?, ?, ?, ?)');
+            if (!$insertQuery) {
+                echo "Failed to prepare the insert query: " . $db->error . "\n";
+                return;
+            }
+            $insertQuery->bind_param("sisi", $token, $timestamp, $email, $user_id);
 
             if ($insertQuery->execute()) {
+                echo "Session information inserted successfully.\n";
                 // Prepare successful response
                 $this->response = [
                     'type' => 'login_response',
@@ -117,6 +134,7 @@ class MessageProcessor
                     ]
                 ];
             } else {
+                echo "Failed to insert session information: " . $db->error . "\n";
                 // Handle insert failure
                 $this->response = [
                     'type' => 'login_response',
@@ -127,6 +145,7 @@ class MessageProcessor
                 ];
             }
         } else {
+            echo "Login failed: Invalid email or password.\n";
             // Invalid credentials
             $this->response = [
                 'type' => 'login_response',
@@ -146,15 +165,23 @@ class MessageProcessor
      */
     private function processorRegistrationRequest($payload)
     {
+        echo "Starting registration process...\n";
         $email = $payload['email'];
         $hashedPassword = $payload['hashedPassword'];
 
         // Connect to the database
+        echo "Connecting to the database...\n";
         $db = connectDB();
+        if ($db === null) {
+            echo "Failed to connect to the database.\n";
+            return;
+        }
+        echo "Database connection successful.\n";
 
         // Check if the email is already registered
         $query = $db->prepare("SELECT email FROM users WHERE email = ?");
         if (!$query) {
+            echo "Failed to prepare query: " . $db->error . "\n";
             $this->response = [
                 'type' => 'register_response',
                 'payload'=>[
@@ -176,6 +203,7 @@ class MessageProcessor
 
         // If email exists, registration should fail
     if ($query->fetch()) {
+        echo "Email is already registered: $email\n";
         $this->response = [
             'type' => 'register_response',
             'payload'=>[
@@ -193,11 +221,13 @@ class MessageProcessor
 
     // Close the select statement
     $query->close();
+    echo "Email is not registered. Proceeding with registration.\n";
 
 
     // Prepare an insert statement to register the new user
     $insertQuery = $db->prepare("INSERT INTO users (email, hashed_password) VALUES (?, ?)");
     if (!$insertQuery) {
+        echo "Failed to prepare insert query: " . $db->error . "\n";
         $this->response = [
             'type' => 'register_response',
             'payload'=>[
@@ -213,6 +243,7 @@ class MessageProcessor
 
     // Execute the insert statement
     if ($insertQuery->execute()) {
+        echo "User registered successfully.\n";
         // Registration successful
         $this->response = [
             'type' => 'register_response',
@@ -222,6 +253,7 @@ class MessageProcessor
             ]
         ];
     } else {
+        echo "Failed to register the user: " . $db->error . "\n";
         // Registration failed
         $this->response = [
             'type' => 'register_response',
