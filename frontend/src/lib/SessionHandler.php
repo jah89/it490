@@ -47,7 +47,7 @@ abstract class SessionHandler {
             static::$session = new \nba\shared\Session(
                 $responsePayload['token'],
                 $responsePayload['expiration'],
-                $responsePayload['userID'],
+                //$responsePayload['userID'],
                 $responsePayload['email']
             );
                 return static::$session;
@@ -83,7 +83,7 @@ abstract class SessionHandler {
             static::$session = new \nba\shared\Session(
                 $response['token'],
                 $response['expiration'],
-                $response['userID'],
+                //$response['userID'],
                 $response['email']
             );
 

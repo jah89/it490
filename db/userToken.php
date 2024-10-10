@@ -1,5 +1,6 @@
 <?php
 require 'Session.inc.php';
+require __DIR__.'/../frontend/shared/messaging/frontend/LoginResponse.php';
 
 
 //echo uniqid() . "\n";
@@ -18,8 +19,7 @@ consuming LoginRequest Object of Rabbit
 
 then use getEMail function to use in session instance  Ex. session = new Session(getEmail(), $token, $timestamp);
 
-
-
+*/
 
 
 

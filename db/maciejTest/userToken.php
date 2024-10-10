@@ -1,7 +1,6 @@
 <?php
 require 'Session.inc.php';
 
-
 //echo uniqid() . "\n";
 //echo time() ."\n";
 
@@ -9,7 +8,7 @@ require 'Session.inc.php';
 $token = uniqid();
 $timestamp = time() + (3 * 3600);
 $session = new Session($token, $timestamp, "bob");
-$loginResponse = new LoginResponse(true, $session);
+$loginResponse = new \nba\shared\messaging\frontend\LoginResponse(true, $session);
 
 //$loginResponse = new LoginResponse(true, null);
 

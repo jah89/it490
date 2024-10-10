@@ -61,14 +61,14 @@ abstract class LoginResponse implements JsonSerializable
      * @param boolean              $result  True if succesfully logged in, otherwise false.
      * @param Session $session The session object, defaults to null.
      */
-    public function __construct(bool $result, string $type = 'login_response', string $email, string $sessionToken, int $expirationTimestamp, int $userID)
+    public function __construct(bool $result, string $type = 'login_response', string $email, string $sessionToken, int $expirationTimestamp)
     {
         $this->result  = $result;
         $this->type = $type;
         $this->email = $email;
         $this->sessionToken = $sessionToken;
         $this->expirationTimestamp = $expirationTimestamp;
-        $this->userID = $userID;
+        //$this->userID = $userID;
 
     }
 
@@ -80,7 +80,7 @@ abstract class LoginResponse implements JsonSerializable
             'email'=>$this->email,
             'token'=>$this->sessionToken,
             'timestamp'=> $this->expirationTimestamp,
-            'userID'=> $this->userID
+            //'userID'=> $this->userID
         ];
     }
     //start of getters
@@ -133,10 +133,10 @@ abstract class LoginResponse implements JsonSerializable
      *
      * @return string UID.
      */
-    public function getUserId()
-    {
-        return $this->userID;
+    // public function getUserId()
+    // {
+    //     return $this->userID;
 
-    }//end getUserId()
+    // }//end getUserId()
 
 }//end class
