@@ -93,40 +93,47 @@ class MessageProcessor
         $query->bind_param("ss", $email, $hashedPassword);
         $query->execute();
         $result = $query->get_result();
-
+        $num_rows = mysqli_num_rows($result);
         // Check if the user credentials are valid
-        if ($result->num_rows > 0) {
+        if ($num_rows > 0) {
             // Authentication successful, generate session token
             $token = uniqid();
             $timestamp = time() + (3 * 3600); // Token expiration set to 3 hours
 
             // Insert session information into the sessions table
-            $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email) VALUES (?, ?, ?)');
+            $insertQuery = $db->prepare('INSERT INTO sessions VALUES (?, ?, ?)');
             $insertQuery->bind_param("sis", $token, $timestamp, $email);
 
             if ($insertQuery->execute()) {
                 // Prepare successful response
                 $this->response = [
                     'type' => 'login_response',
-                    'status' => 'success',
+                    'payload'=> [
+                    'result' => 'true',
                     'message' => "Login successful for $email",
+                    'email' => $email,
                     'session_token' => $token,
                     'expiration_timestamp' => $timestamp
+                    ]
                 ];
             } else {
                 // Handle insert failure
                 $this->response = [
                     'type' => 'login_response',
-                    'status' => 'error',
+                    'payload'=>[
+                    'result' => 'false',
                     'message' => "Login successful, but failed to create session."
+                    ]
                 ];
             }
         } else {
             // Invalid credentials
             $this->response = [
                 'type' => 'login_response',
-                'status' => 'error',
+                'payload'=> [
+                'status' => 'false',
                 'message' => "Login failed: Invalid email or password."
+                ]
             ];
         }
 
@@ -150,8 +157,10 @@ class MessageProcessor
         if (!$query) {
             $this->response = [
                 'type' => 'register_response',
-                'status' => 'error',
+                'payload'=>[
+                'result' => 'false',
                 'message' => 'Error preparing statement.'
+                ]
             ];
             return;
         }
@@ -169,8 +178,10 @@ class MessageProcessor
     if ($query->fetch()) {
         $this->response = [
             'type' => 'register_response',
-            'status' => 'failed',
+            'payload'=>[
+            'result' => 'false',
             'message' => 'Email is already registered.'
+            ]
         ];
 
         // Close the query and the connection
@@ -189,8 +200,10 @@ class MessageProcessor
     if (!$insertQuery) {
         $this->response = [
             'type' => 'register_response',
-            'status' => 'error',
+            'payload'=>[
+            'result' => 'false',
             'message' => 'Error preparing insert statement.'
+            ]
         ];
         return;
     }
@@ -203,15 +216,19 @@ class MessageProcessor
         // Registration successful
         $this->response = [
             'type' => 'register_response',
-            'status' => 'success',
+            'payload'=>[
+            'result' => 'true',
             'message' => "Registration successful for $email"
+            ]
         ];
     } else {
         // Registration failed
         $this->response = [
             'type' => 'register_response',
-            'status' => 'failed',
+            'payload'=>[
+            'result' => 'false',
             'message' => 'Failed to register the user.'
+            ]
         ];
     }
 
