@@ -64,9 +64,11 @@ class RabbitMQServer
 				$body = $msg->getBody();
 				$request = json_decode($body, true);
 				error_log("request:   " . json_encode($request));
+				$payload = $request['payload'];
+				error_log("payload: " . json_encode($payload));
 				if (isset($this->callback))
 				{
-					$response = call_user_func($this->callback, $request);
+					$response = call_user_func($this->callback, $request, $payload);
 				}
 
       $params = array();
@@ -100,7 +102,7 @@ class RabbitMQServer
 				$body = $msg->getBody();
 				$payload = json_decode($body, true);
                 if (isset($this->callback)) {
-                    call_user_func($this->callback, $request);
+                    call_user_func($this->callback, $payload);
                 }
 				echo "processed one-way message\n";
             }

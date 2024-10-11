@@ -3,8 +3,7 @@
  * Class that contains main processor function to call different processors,
  * as well as the processors themselves.
  */
-require_once('/home/enisakil/git/it490/db/connectDB.php');
-require_once('/home/enisakil/git/it490/db/get_host_info.inc');
+require_once(__DIR__.'/../connectDB.php');
 
 
 class MessageProcessor
@@ -69,7 +68,7 @@ class MessageProcessor
         $db = connectDB();
         if ($db === null) {
             $this->response = [
-                'type' => 'LoginResponse',
+                'type' => 'login_response',
                 'status' => 'error',
                 'message' => 'Database connection failed.'
             ];
@@ -85,7 +84,7 @@ class MessageProcessor
         } else {
             echo "Failed to set email and password.\n";
             $this->response = [
-                'type' => 'LoginResponse',
+                'type' => 'login_response',
                 'status' => 'error',
                 'message' => 'Missing email or hashedPassword.'
             ];
@@ -109,14 +108,10 @@ class MessageProcessor
         echo "Number of rows found: " . $num_rows . "\n";
         // Check if the user credentials are valid
         if ($num_rows > 0) {
-            // Fetch the user_id from the query result
-            $userData = $result->fetch_assoc();
-            $user_id = $userData['user_id'];  // Fetch the user_id from the users table
-            echo "Login successful. User ID: $user_id. Preparing to insert session information.\n";
-            
+            echo "Login successful. Preparing to insert session information.\n";
             // Authentication successful, generate session token
             $token = uniqid();
-            $timestamp = time();
+            $timestamp = time() + (3 * 3600); // Token expiration set to 3 hours
 
             // Insert session information into the sessions table
             $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email, user_id) VALUES (?, ?, ?, ?)');
@@ -124,10 +119,7 @@ class MessageProcessor
                 echo "Failed to prepare the insert query: " . $db->error . "\n";
                 return;
             }
-            $insertQuery->bind_param("sssi", $token, $timestamp, $email, $user_id);
-
-            // Log the variables for debugging purposes
-            echo "Token: $token\nTimestamp: $timestamp\nEmail: $email\nUser ID: $user_id\n";
+            $insertQuery->bind_param("sisi", $token, $timestamp, $email, $user_id);
 
             if ($insertQuery->execute()) {
                 echo "Session information inserted successfully.\n";
@@ -137,8 +129,9 @@ class MessageProcessor
                     'result' => 'true',
                     'message' => "Login successful for $email",
                     'email' => $email,
-                    'session_token' => $token,
-                    'expiration_timestamp' => $timestamp
+                    'token' => $token,
+                    'timestamp' => $timestamp,
+                    'userID'=> $userID
                     ]
                 ;
             } else {
@@ -298,7 +291,7 @@ class MessageProcessor
         $currentTimestamp = time();
 
         // Check if the session is expired
-        if ($sessionData['timestamp'] > $currentTimestamp - (3 * 3600)) {
+        if ($sessionData['timestamp'] > $currentTimestamp) {
             // Session is valid and not expired
             $this->response = [
                 'type' => 'SessionValidationResponse',

@@ -2,7 +2,7 @@
 /**
 * User session object.
 */
-namespace nba\shared;
+
 /**
 * A user's session.
 */
@@ -11,9 +11,9 @@ class Session {
     /**
      * User's username.
      *
-     * @var string $email is User's email/username.
+     * @var string $username is User's username.
      */
-    private string $email;
+    private string $username;
 
     /**
      * User's session token.
@@ -25,35 +25,35 @@ class Session {
     /**
      * Session expiration time using Unix epoch timestamp.
      *
-     * @var string $expirationTimestamp is the timestamp of session expiration.
+     * @var string $$sessionExpiration is the timestamp of session expiration.
      */
-    private int $expirationTimestamp;
+    private string $sessionExpiration;
 
     /**
      * User's ID.
      *
-     * @var string $userID is the ID of user.
+     * @var string $UID is the ID of user.
      */
-    //private string $userID;
+    //private string $UID;
 
     /**
     * Constructor to create a new session.
     *
     * @param string $sessionToken The session token.
-    * @param integer $expirationTimestamp Timestamp of session expiration.
+    * @param integer $sessionExpiration Timestamp of expiration.
     * @param string $UID The user's ID.
     * @param string $username The user's username.
     */
     public function __construct(
         string $sessionToken,
-        int $expirationTimestamp,
-        //string $userID,
-        string $email
+        int $sessionExpiration,
+        //string $UID,
+        string $username
     ) {
-        $this->email             = $email;
-        //$this->userID            = $userID;
+        $this->username          = $username;
+        //$this->UID               = $UID;
         $this->sessionToken      = $sessionToken;
-        $this->expirationTimestamp  = $expirationTimestamp;
+        $this->sessionExpiration = $sessionExpiration;
     } //end of contstructor
 
     //start of getters
@@ -62,9 +62,9 @@ class Session {
      *
      * @return string Username.
      */
-    public function getEmail()
+    public function getUsername()
     {
-        return $this->email;
+        return $this->username;
 
     }
 
@@ -82,24 +82,27 @@ class Session {
     /**
      * Gets session expiration timestamp.
      *
-     * @return int Session expiration timestamp.
+     * @return integer Session expiration timestamp.
      */
-    public function getExpirationTimestamp()
+    public function getSessionExpiration()
     {
-        return $this->expirationTimestamp;
+        return $this->sessionExpiration;
 
     }
+
 
     /**
      * Gets the user ID.
      *
      * @return string UID.
      */
-    // public function getUserId()
-    // {
-    //     return $this->userID;
+    /*
+    public function getUserId()
+    {
+        return $this->UID;
 
-    // }//end getUserId()
+    }//end getUserId()
+    */
 //end getters
 
 }//end Session class
