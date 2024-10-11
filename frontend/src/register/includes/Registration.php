@@ -83,7 +83,7 @@ abstract class Registration {
                     $salt = '$2y$10$';
 
                     // Hash the password with the specified salt using bcrypt
-                    $hashedPassword = crypt($password, $salt);
+                    $hashedPassword = $password;
                     //echo $password;
                     //echo $hashedPassword;
         

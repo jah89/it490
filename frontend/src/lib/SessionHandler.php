@@ -43,11 +43,11 @@ abstract class SessionHandler {
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
         $responseData = json_decode($response, true);
         $responsePayload = $responseData['payload'];
-        if($responseData['type'] === 'login_response' && $responsePayload['result'] === true) {
+        if($responseData['type'] === 'login_response' && $responsePayload['result'] == true) {
             static::$session = new \nba\shared\Session(
                 $responsePayload['token'],
                 $responsePayload['expiration'],
-                $responsePayload['userID'],
+                //$responsePayload['userID'],
                 $responsePayload['email']
             );
                 return static::$session;
@@ -73,32 +73,37 @@ abstract class SessionHandler {
 
         $cookieName = 'session_cookie';
         $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword, 'login_request');
-        error_log(print_r($request,true));
+        //error_log(print_r($request,true));
         $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../rabbit/host.ini', "Authentication");
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
-        
-        //$responseData = json_decode($response, true);
 
-        if($response['type'] === 'login_response' && $response['result'] === true) {
+        if($response['type'] === 'login_response' &&  $response['result'] == true) {
             static::$session = new \nba\shared\Session(
-                $response['token'],
-                $response['expiration'],
-                $response['userID'],
+                $response['session_token'],
+                $response['expiration_timestamp'],
+                //$response['userID'],
                 $response['email']
             );
+            //error_log('session setting issue' . print_r(static::$session, true));
 
         } else {
             return false;
         }
-                if (isset($session)){
+                if (isset(static::$session)){
+                    error_log("session is set   ". print_r(static::$session,true));
+                    if (headers_sent()) {
+                        error_log('Headers already sent.');
+                    } else {
+                        error_log('setting cookie');
                     setcookie(
                         $cookieName,
-                        $session->getSessionToken(),
-                        $session->getExpirationTimestamp(),
+                        static::$session->getSessionToken(),
+                        static::$session->getExpirationTimestamp(),
                         '/',
                         $_SERVER['SERVER_NAME'],
                     );
-                    
+                    error_log('cookie was set  '. print_r($_COOKIE, true));
+                }
                     return static::$session;
                 } else {
                     return false;

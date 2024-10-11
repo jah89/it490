@@ -27,7 +27,7 @@ class Session {
      *
      * @var string $expirationTimestamp is the timestamp of session expiration.
      */
-    private string $expirationTimestamp;
+    private int $expirationTimestamp;
 
     /**
      * User's ID.
@@ -47,11 +47,11 @@ class Session {
     public function __construct(
         string $sessionToken,
         int $expirationTimestamp,
-        string $userID,
+        //string $userID,
         string $email
     ) {
         $this->email             = $email;
-        $this->userID            = $userID;
+        //$this->userID            = $userID;
         $this->sessionToken      = $sessionToken;
         $this->expirationTimestamp  = $expirationTimestamp;
     } //end of contstructor
@@ -82,7 +82,7 @@ class Session {
     /**
      * Gets session expiration timestamp.
      *
-     * @return integer Session expiration timestamp.
+     * @return int Session expiration timestamp.
      */
     public function getExpirationTimestamp()
     {

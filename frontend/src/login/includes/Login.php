@@ -41,17 +41,17 @@ abstract class Login {
 
                 if (!$hasError) {
                     //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                    $salt = '$2y$10$';
+                    //$salt = '$2y$10$';
 
                     // Hash the password with the specified salt using bcrypt
-                    $hashedPassword = crypt($password, $salt);
+                    $hashedPassword = $password;
                     static::$session = \nba\src\lib\SessionHandler::login($email, $hashedPassword);
                     ?>
                     <?php
-
-                    if(static::$session) {
-                        header('Location: /home');
-                        exit();
+                    //error_log('hi' . print_r(static::$session, true));
+                    if(static::$session == false){
+                        //header('Location: /home');
+                        //exit();
                     } else {
 
                         die("Failed to process login request.");
