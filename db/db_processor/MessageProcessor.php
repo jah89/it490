@@ -109,10 +109,14 @@ class MessageProcessor
         echo "Number of rows found: " . $num_rows . "\n";
         // Check if the user credentials are valid
         if ($num_rows > 0) {
-            echo "Login successful. Preparing to insert session information.\n";
+            // Fetch the user_id from the query result
+            $userData = $result->fetch_assoc();
+            $user_id = $userData['user_id'];  // Fetch the user_id from the users table
+            echo "Login successful. User ID: $user_id. Preparing to insert session information.\n";
+            
             // Authentication successful, generate session token
             $token = uniqid();
-            $timestamp = time() + (3 * 3600); // Token expiration set to 3 hours
+            $timestamp = time();
 
             // Insert session information into the sessions table
             $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email, user_id) VALUES (?, ?, ?, ?)');
@@ -120,7 +124,10 @@ class MessageProcessor
                 echo "Failed to prepare the insert query: " . $db->error . "\n";
                 return;
             }
-            $insertQuery->bind_param("sisi", $token, $timestamp, $email, $user_id);
+            $insertQuery->bind_param("sssi", $token, $timestamp, $email, $user_id);
+
+            // Log the variables for debugging purposes
+            echo "Token: $token\nTimestamp: $timestamp\nEmail: $email\nUser ID: $user_id\n";
 
             if ($insertQuery->execute()) {
                 echo "Session information inserted successfully.\n";
@@ -291,7 +298,7 @@ class MessageProcessor
         $currentTimestamp = time();
 
         // Check if the session is expired
-        if ($sessionData['timestamp'] > $currentTimestamp) {
+        if ($sessionData['timestamp'] > $currentTimestamp - (3 * 3600)) {
             // Session is valid and not expired
             $this->response = [
                 'type' => 'SessionValidationResponse',
