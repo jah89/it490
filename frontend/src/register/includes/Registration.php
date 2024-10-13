@@ -20,23 +20,35 @@ abstract class Registration {
         </head>
 
         <body>
+        <div class="w-full max-w-md"> 
+        <div class="relative md:flex md:items-start mb-6">
             <form id="registerForm" method="POST">
-                <div>
-                    <label for="email">Email</label>
-                    <input type="email" name="email" required />
-                </div>
-                <div>
-                    <label for="password">Password</label>
-                    <input type="password" id="pw" name="password" required minlength="8" />
-                </div>
-                <div>
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" name="confirmPassword" required minlength="8" />
-                </div>
-                <input type="submit" value="Register" />
+            <div class="md:flex md:items-start mb-6">
+                        <label class="items-start block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email">Email Address</label>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="email" type="text" placeholder="Jane@test.com" required>
+                    </div>
+                    <div class="md:flex md:items-start mb-6">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="pw">Password</label>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" id="pw" name="password" required minlength="8" />
+                    </div>
+                    <div class="md:flex md:items-start mb-6">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="confirmPassword">Confirm Password</label>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" name="confirmPassword" required minlength="8" />
+                    </div>
+                    <div class="md:flex md:items-center mb-6">
+                        <input type="submit" value="Register" />
+                    </div>
+            </div>
             </form>
-
+            
             <div id="statusMessage"></div>
+            <div class="w-full max-w-md"> 
+                <div class=" relative md:flex items-start">
+                    <h2 class="text-xl font-bold mx-10 px-10">Already have an account?</h2>
+    </div>
+    <div class=" relative md:flex items-start">
+                    <a class="mx-10 px-10" href="../../login/"> Sign In</a>
+                </div>
         </body>
     </html>
 

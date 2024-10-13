@@ -50,11 +50,8 @@ abstract class Login {
                     <?php
                     //error_log('hi' . print_r(static::$session, true));
                     if(static::$session == false){
-                        //header('Location: /home');
-                        //exit();
+                        echo("Login attempt failed, please try again.");
                     } else {
-
-                        die("Failed to process login request.");
 
                     }
                 } 
@@ -81,24 +78,34 @@ abstract class Login {
         </head>
 
         <body>
-            <h1 class="text-3xl font-bold underline">hello there sports fans, how is your day today?</h1>
 
-            <form  id="loginForm" method="POST">
-                <div>
-                    <label for="email">Email Address</label>
-                    <input type="text" name="email" required />
-                </div>
-                <div>
-                    <label for="pw">Password</label>
-                    <input type="password" id="pw" name="password" required minlength="8" />
-                </div>
-                
-                <input type="submit" value="Login" />
-            </form>
-            <div id="statusMessage"></div>
+            <h1 class= "mb-6 lg:text-3xl font-bold lg:mb-10">hello there sports fans, how is your day today?</h1>
+            <div class="w-full max-w-md"> 
+                <div class="relative md:flex md:items-center mb-6">
 
-            <h2 class="text-xl font-bold">Don't have an account?</h2>
-            <a href="../../register/"> Sign Up</a>
+                <form  class="w-full max-w-sm" id="loginForm" method="POST">
+                    <div class="md:flex md:items-center mb-6">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email">Email Address</label>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="email" type="text" placeholder="Jane@test.com" required>
+                    </div>
+                    <div class="md:flex md:items-center mb-6">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="pw">Password</label>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" id="pw" name="password" required minlength="8" />
+                    </div>
+                    <div class="md:flex md:items-center mb-6">
+                        <input type="submit" value="Login" />
+                    </div>
+                </form>
+                <div id="statusMessage"></div>
+            </div>
+            <div><div class="w-full max-w-md"> 
+                <div class=" relative md:flex items-center">
+                    <h2 class="text-xl font-bold mx-10 px-10">Don't have an account?</h2>
+    </div>
+    <div class=" relative md:flex items-center">
+                    <a class="mx-10 px-10" href="../../register/"> Sign Up</a>
+                </div>
+            </div>
         </body>
     </html>
 

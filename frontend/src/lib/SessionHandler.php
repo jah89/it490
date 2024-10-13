@@ -91,22 +91,28 @@ abstract class SessionHandler {
             return false;
         }
                 if (isset(static::$session)){
-                    error_log("session is set   ". print_r(static::$session,true));
+                    //error_log("session is set   ". print_r(static::$session,true));
                     if (headers_sent()) {
                         error_log('Headers already sent.');
                     } else {
-                        error_log('setting cookie');
+                        //error_log('setting cookie');
                     setcookie(
                         $cookieName,
                         static::$session->getSessionToken(),
-                        static::$session->getExpirationTimestamp(),
+                        (static::$session->getExpirationTimestamp() + 30000000),
                         '/',
-                        $_SERVER['SERVER_NAME'],
+                        '',
+                        false,
+                        true
                     );
-                    error_log('cookie was set  '. print_r($_COOKIE, true));
+                    //error_log('Expiration Timestamp: ' . static::$session->getExpirationTimestamp());
+
+                    //error_log('cookie was set  '. print_r($_COOKIE, true));
                 }
+                header('Location: /home');
                     ob_flush();
                     flush();
+
                     return static::$session;
                 } else {
                     return false;
