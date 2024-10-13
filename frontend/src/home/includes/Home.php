@@ -24,17 +24,31 @@ abstract class Home {
         </head>
 
         <body>
-            <h1 class="text-4xl font-bold">HOME</h1>
+        <div class="relative flex min-h-screen flex-col 
+        justify-center overflow-hidden bg-slate-200 px-12 py-6 sm:py-32 lg:py-14">
+            <h1 class="text-lg lg:text-2xl font-bold">HOME</h1>
+            <div class="text-lg lg:text-3xl space-y-6 py-8 leading-7 text-gray-600">
+            <table class="table-auto">
+                <thead>
 
-            <table>
-                <tr>Player Stats</tr>
-                <tr>Name</tr>
-                <tr>wins/losses?</tr>
-                <tr>shooting pct?</tr>
+                    <tr >
+                    <th class="px-12"></th>
+                    <th class="px-12 font-extrabold underline underline-offset-3">Player Stats</th>
+                    <th class="px-12"></th>    
+                    </tr>
+                    <tr>
+                    <th class="px-12">Name</th>
+                    <th class="px-12">wins/losses?</th>
+                    <th class="px-12">shooting pct?</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
             </table>
+            </div>
+        </div>
 
             
-            <a href="../../logout/"> Logout</a>
+            <a href="../../logout/" class="hover:text-3xl pb-20"> Logout</a>
         </body>
     </html>
 

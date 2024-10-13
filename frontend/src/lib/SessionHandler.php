@@ -71,7 +71,7 @@ abstract class SessionHandler {
      * @return false or Session object
      */
     public static function login(string $email, string $hashedPassword) {
-
+        ob_start();
         $cookieName = 'session_cookie';
         $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword, 'login_request');
         //error_log(print_r($request,true));
@@ -105,6 +105,8 @@ abstract class SessionHandler {
                     );
                     error_log('cookie was set  '. print_r($_COOKIE, true));
                 }
+                    ob_flush();
+                    flush();
                     return static::$session;
                 } else {
                     return false;
