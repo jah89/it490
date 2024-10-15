@@ -84,7 +84,7 @@ abstract class Login {
                 <div class="relative md:flex md:items-center mb-6">
 
                 <form  class="w-full max-w-sm" id="loginForm" method="POST">
-                    <div class="md:flex md:items-center mb-6">
+                <div class="md:flex md:items-center mb-6">
                         <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email">Email Address</label>
                         <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="email" type="text" placeholder="Jane@test.com" required>
                     </div>
@@ -98,7 +98,7 @@ abstract class Login {
                 </form>
                 <div id="statusMessage"></div>
             </div>
-            <div><div class="w-full max-w-md"> 
+            <div class="w-full max-w-md"> 
                 <div class=" relative md:flex items-center">
                     <h2 class="text-xl font-bold mx-10 px-10">Don't have an account?</h2>
     </div>
