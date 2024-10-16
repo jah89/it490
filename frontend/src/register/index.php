@@ -1,6 +1,6 @@
 <?php
 /**
- * Loads login page
+ * Loads registration page
  */
 
 namespace nba\src\register;

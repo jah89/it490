@@ -74,7 +74,7 @@ abstract class SessionHandler {
         ob_start();
         $cookieName = 'session_cookie';
         $request = new \nba\shared\messaging\frontend\LoginRequest($email, $hashedPassword, 'login_request');
-        //error_log(print_r($request,true));
+        //error_log("Attempted to send json including:" . print_r($request, true));
         $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../rabbit/host.ini', "Authentication");
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
 

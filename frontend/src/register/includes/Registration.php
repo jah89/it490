@@ -20,33 +20,32 @@ abstract class Registration {
         </head>
 
         <body>
-        <div class="w-full max-w-md"> 
-        <div class="relative md:flex md:items-start mb-6">
+
             <form id="registerForm" method="POST">
-            <div class="md:flex md:items-start mb-6">
+                <div class="w-full max-w-md pt-20">
+                    <div class="md:flex md:items-start mb-6 mt-20">
                         <label class="items-start block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="email">Email Address</label>
-                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="email" type="text" placeholder="Jane@test.com" required>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="email" type="text" name="email" placeholder="Jane@test.com" required>
                     </div>
                     <div class="md:flex md:items-start mb-6">
-                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="pw">Password</label>
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="password">Password</label>
                         <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" id="pw" name="password" required minlength="8" />
                     </div>
                     <div class="md:flex md:items-start mb-6">
                         <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="confirmPassword">Confirm Password</label>
                         <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" name="confirmPassword" required minlength="8" />
                     </div>
-                    <div class="md:flex md:items-center mb-6">
+                    <div class="md:flex md:items-center mb-6"> 
                         <input type="submit" value="Register" />
                     </div>
-            </div>
+                </div>
             </form>
             
             <div id="statusMessage"></div>
             <div class="w-full max-w-md"> 
-                <div class=" relative md:flex items-start">
                     <h2 class="text-xl font-bold mx-10 px-10">Already have an account?</h2>
     </div>
-    <div class=" relative md:flex items-start">
+        <div class=" relative md:flex items-start">
                     <a class="mx-10 px-10" href="../../login/"> Sign In</a>
                 </div>
         </body>
@@ -90,22 +89,16 @@ abstract class Registration {
                     echo ("password and confirm must match");
                     $hasError = true;
                 }
+                error_log("error status:" . print_r($hasError));
                 if (!$hasError) {
-                    //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                    $salt = '$2y$10$';
-
-                    // Hash the password with the specified salt using bcrypt
-                    $hashedPassword = $password;
-                    //echo $password;
-                    //echo $hashedPassword;
-        
-                    $json_message = json_encode(['type'=>'register_request', 'email' => $email, 'password' => $hashedPassword]);
+                    $json_message = json_encode(['type'=>'register_request', 'email' => $email, 'password' => $password]);
                     $client = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
-                    //print_r($json_message);
+                    //error_log("sending " . print_r($json_message, true));
                     if($client->send_request($json_message, 'register_request')) {
-                    //echo "Message published successfuly:  $json_message";
+                    error_log("Message published successfuly: ".print_r($json_message));
                     } else {
-                    echo "Failed to publish message: $json_message";
+                    //echo "Failed to publish message: $json_message";
+                    error_log("Message failed to publish: " . print_r($json_message));
                     }
                 }
             } 

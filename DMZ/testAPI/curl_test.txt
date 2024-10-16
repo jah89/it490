@@ -1,6 +1,5 @@
 Games: {"get":"games\/","parameters":{"date":"2022-03-09"},
-"errors":[],"results":6,
-"response":[
+"errors":[],"results":6,"response":[
     
 {"id":10540,"league":"standard","season":2021,
 "date":{"start":"2022-03-09T00:00:00.000Z",
