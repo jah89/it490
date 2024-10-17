@@ -345,12 +345,23 @@ class MessageProcessor
      */
     private function processorChatRequest($request)
     {
+
+        // Check if all required fields are present
+        if (empty($request['uname']) || empty($request['msg']) || empty($request['timestamp'])) {
+            $this->response = [
+                'type' => 'ChatResponse',
+                'status' => 'error',
+                'message' => 'Missing required fields.'
+            ];
+            return;
+        }
+
         // Connect to the database
         echo "Connecting to the database...\n";
         $db = connectDB();
         if ($db === null) {
             $this->response = [
-                'type' => 'LoginResponse',
+                'type' => 'ChatResponse',
                 'status' => 'error',
                 'message' => 'Database connection failed.'
             ];
@@ -358,12 +369,41 @@ class MessageProcessor
         }
         echo "Database connection successful.\n";
 
+        $username = $request['uname'];
+        $message = $request['msg'];
+        $timestamp = $request['timestamp'];
+
+
+        // Prepare and execute insert query
+        $insertQuery = $db->prepare('INSERT INTO chat_messages (username, message, timestamp) VALUES (?, ?, ?)');
+        if (!$insertQuery) {
+            $this->response = [
+                'type' => 'ChatResponse',
+                'status' => 'error',
+                'message' => 'Failed to prepare the insert query.'
+            ];
+            return;
+        }
+
+        $insertQuery->bind_param("sss", $username, $message, $timestamp);
+        if ($insertQuery->execute()) {
+            $this->response = [
+                'type' => 'ChatResponse',
+                'status' => 'success',
+                'message' => 'Message stored successfully.'
+            ];
+        } else {
+            $this->response = [
+                'type' => 'ChatResponse',
+                'status' => 'error',
+                'message' => 'Failed to store the message.'
+            ];
+        }
         
         //TODO: write logic to check request fields and query/bind for db 
         //$query = "SELECT username? user id? messages?"
 
-        //prepare response
-        $this->response = [];
+        $insertQuery->close();
         $db->close();
     }
         /**
