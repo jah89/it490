@@ -1,39 +1,7 @@
 <?php
 /* Based on code from https://www.geeksforgeeks.org/online-group-chat-application-using-php/ */
-
-require_once __DIR__ . '/vendor/autoload.php'; // Assuming you're using composer for php-amqplib
 namespace nba\frontend\src\chat;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Message\AMQPMessage;
-
-if (isset($_POST['submit'])) {
-    $uname = $_POST['uname'];
-    $msg = $_POST['msg'];
-    date_default_timezone_set('Asia/Kolkata');
-    $ts = date('y-m-d h:ia');
-
-    // Establish RabbitMQ connection
-    $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
-    $channel = $connection->channel();
-
-    // Declare the queue (name: chat_queue)
-    $channel->queue_declare('chat_queue', false, false, false, false);
-
-    // Create the message with the chat data (username, message, and timestamp)
-    $data = json_encode([
-        'uname' => $uname,
-        'msg' => $msg,
-        'timestamp' => $ts
-    ]);
-    $msg = new AMQPMessage($data);
-
-    // Publish message to the queue
-    $channel->basic_publish($msg, '', 'chat_queue');
-
-    // Close the channel and connection
-    $channel->close();
-    $connection->close();
-}
+require_once __DIR__ . '/vendor/autoload.php'; // Assuming you're using composer for php-amqplib
 ?>
 
 
@@ -60,20 +28,22 @@ if (isset($_POST['submit'])) {
         <form id="myform" action="Group_chat.php" method="POST">
             <div class="inner_div p-4 h-80 overflow-auto bg-cover" id="chathist" style="background-image:url('https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200911064223/bg.jpg');">
                 <?php 
-                $host = "localhost"; 
-                $user = "root"; 
-                $pass = ""; 
-                $db_name = "chat_app"; 
-                $con = new mysqli($host, $user, $pass, $db_name);
+                //TODO: adjust below logic to only use response from backend
+                // $host = "localhost"; 
+                // $user = "root"; 
+                // $pass = ""; 
+                // $db_name = "chat_app"; 
+                // $con = new mysqli($host, $user, $pass, $db_name);
 
-                $query = "SELECT * FROM chats";
-                $run = $con->query($query); 
-                $i=0;
+                // $query = "SELECT * FROM chats";
+                // $run = $con->query($query); 
+                // $i=0;
 
-                while($row = $run->fetch_array()) : 
-                if($i==0){
-                $i=5;
-                $first=$row;
+                // while($row = $run->fetch_array()) : 
+                // if($i==0){
+                // $i=5;
+                // $first=$row;
+                    
                 ?>
                 <div class="triangle1 float-right"></div>
                 <div class="bg-blue-400 text-white p-2 rounded-md mb-2 float-right max-w-xs clear-both"> 
@@ -123,22 +93,7 @@ if (isset($_POST['submit'])) {
 </body>
 </html>
 
-<?php
-require_once 'path/to/your/rabbitmq_client.php';
 
-$rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__."/../../rabbit/host.ini", "CHAT"); // Instantiate your RabbitMQ client
-$requestMessage = json_encode(['type' => 'get_chat_history']); // Define the request
-
-// Send the request to RabbitMQ and wait for the response
-$response = $rabbitClient->send_request($requestMessage, 'application/json');
-
-// Decode the response (assume it's JSON encoded chat history)
-$chatHistory = json_decode($response, true);
-
-// Send the response back to the frontend
-header('Content-Type: application/json');
-echo json_encode($chatHistory); // Send the chat history to the JavaScript frontend
-?>
 
 <script>
     document.getElementById('myform').addEventListener('submit', function(event) {
@@ -149,7 +104,7 @@ echo json_encode($chatHistory); // Send the chat history to the JavaScript front
 
     // Send the message to the server via AJAX
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'Group_chat.php', true);
+    xhr.open('POST', 'front_chat.php', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -162,7 +117,7 @@ echo json_encode($chatHistory); // Send the chat history to the JavaScript front
 
 function loadChatHistory() {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch_chat_history.php', true); // Send request to PHP script
+    xhr.open('GET', 'fetch_chat_history.php', true); // Send request to PHP script to fetch history via rabbit
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const chatHistory = JSON.parse(xhr.responseText);
@@ -178,7 +133,7 @@ function displayChatHistory(chatHistory) {
 
     chatHistory.forEach(message => {
         const msgElement = document.createElement('div');
-        msgElement.className = 'message'; // Tailwind or other classes for styling
+        msgElement.className = 'message'; // Tailwind for styling
 
         msgElement.innerHTML = `
             <strong>${message.uname}:</strong> ${message.msg}<br/>

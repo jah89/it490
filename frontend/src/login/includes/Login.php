@@ -42,12 +42,13 @@ abstract class Login {
 
                 if (!$hasError) {
                     static::$session = \nba\src\lib\SessionHandler::login($email, $password);
-                    ?>
-                    <?php
+
                     if(static::$session == false){
                         echo("Login attempt failed, please try again.");
                     } else {
-
+                        $userID=static::$session->getUserId();
+                        $userID=$_POST['userID'];
+                        header('Location: /home'.'?'.$userID);
                     }
                 } 
             }

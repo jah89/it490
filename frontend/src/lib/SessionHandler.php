@@ -47,8 +47,7 @@ abstract class SessionHandler {
             static::$session = new \nba\shared\Session(
                 $responsePayload['token'],
                 $responsePayload['expiration'],
-                //$responsePayload['userID'],
-                //$responsePayload['userID'],
+                $responsePayload['userID'],
                 $responsePayload['email']
             );
                 return static::$session;
@@ -109,7 +108,6 @@ abstract class SessionHandler {
 
                     //error_log('cookie was set  '. print_r($_COOKIE, true));
                 }
-                header('Location: /home');
                     ob_flush();
                     flush();
 
