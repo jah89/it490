@@ -99,7 +99,7 @@ abstract class SessionHandler {
                     setcookie(
                         $cookieName,
                         static::$session->getSessionToken(),
-                        (static::$session->getExpirationTimestamp() + 30000000),
+                        (static::$session->getExpirationTimestamp()),
                         '/',
                         '',
                         false,

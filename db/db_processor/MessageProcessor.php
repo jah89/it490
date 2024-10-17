@@ -51,6 +51,10 @@ class MessageProcessor
                 $this->processorSearchRequest($request);
                 break;
 
+            case 'chat_request':
+                $this->processorChatRequest($request);
+                break;
+
             default:
                 $this->responseError = ['status' => 'error', 'message' => 'Unknown request type'];
                 echo "Unknown request type: {$request['type']}\n";
@@ -116,7 +120,7 @@ class MessageProcessor
             
             // Authentication successful, generate session token
             $token = uniqid();
-            $timestamp = time();
+            $timestamp = time() + (6 * 60 * 60);
 
             // Insert session information into the sessions table
             $insertQuery = $db->prepare('INSERT INTO sessions (session_token, timestamp, email, user_id) VALUES (?, ?, ?, ?)');
@@ -336,6 +340,32 @@ class MessageProcessor
         // Perform search logic here
     }
 
+    /**
+     * Process chat history request
+     */
+    private function processorChatRequest($request)
+    {
+        // Connect to the database
+        echo "Connecting to the database...\n";
+        $db = connectDB();
+        if ($db === null) {
+            $this->response = [
+                'type' => 'LoginResponse',
+                'status' => 'error',
+                'message' => 'Database connection failed.'
+            ];
+            return;
+        }
+        echo "Database connection successful.\n";
+
+        
+        //TODO: write logic to check request fields and query/bind for db 
+        //$query = "SELECT username? user id? messages?"
+
+        //prepare response
+        $this->response = [];
+        $db->close();
+    }
         /**
      * Get the response to send back to the client.
      *
