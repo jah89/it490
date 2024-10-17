@@ -4,7 +4,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://v2.nba.api-sports.io/games?date=2022-03-09", //requires at least one parameter (league, season, date, etc)
+    CURLOPT_URL => "https://v2.nba.api-sports.io/games?season=2022&league=standard", //(able to get all games played in 2022 for standard league) requires at least one parameter (league, season, date, etc)
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
