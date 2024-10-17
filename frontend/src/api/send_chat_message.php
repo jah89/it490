@@ -8,7 +8,7 @@ if (!$data || !isset($data['uname']) || !isset($data['msg'])) {
 }
 
 function sendMessage($uname, $msg) {
-    $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Chat");
+    $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Chatgit ");
     
     $request = [
         'type' => 'sendMessage',
