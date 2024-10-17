@@ -144,7 +144,7 @@ class RabbitMQClient
 	 */
 	function publish($message)
 	{
-		$json_message = new \AMQPMessage($message);
+		$message = new \AMQPMessage($message);
 		try
 		{
 		$params 			= array();

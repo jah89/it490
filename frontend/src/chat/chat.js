@@ -2,62 +2,84 @@
  * JavaScript that handles chat functionality
  */
 
-    function show_func() {
-        var element = document.getElementById("chathist");
-        element.scrollTop = element.scrollHeight;
-    }
-
-
-    
-    document.getElementById('myform').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting normally
-
-    const uname = document.getElementById('uname').value;
-    const msg = document.getElementById('msg').value;
-
-    // Send the message to the server via AJAX
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'front_chat.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById('msg').value = ''; // Clear the message input field
-            loadMessages(); // Refresh the chat history
-        }
-    };
-    xhr.send('uname=' + encodeURIComponent(uname) + '&msg=' + encodeURIComponent(msg));
+/* Fetch chat history when the page loads*/
+document.addEventListener("DOMContentLoaded", function() {
+    fetchChatHistory(); // Load chat history on page load
 });
 
-function loadChatHistory() {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'fetch_chat_history.php', true); // Send request to PHP script to fetch history via rabbit
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const chatHistory = JSON.parse(xhr.responseText);
-            displayChatHistory(chatHistory); // Call function to publish chat messages to HTML
-        }
+/*Function to fetch chat history from the server*/
+function fetchChatHistory() {
+    fetch('../api/fetch_chat_history.php')  // Relative path to the API
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();  // Expecting JSON response
+        })
+        .then(data => {
+            const chatHistoryDiv = document.getElementById('chathist');
+            chatHistoryDiv.innerHTML = ''; // Clear the chat history before loading new data
+            data.forEach(chat => {
+                const messageDiv = document.createElement('div');
+                
+                // Differentiating the display of user messages
+                if (chat.uname === sessionUser.userId) {
+                    messageDiv.classList.add('bg-blue-400', 'text-white', 'p-2', 'rounded-md', 'mb-2', 'float-right', 'max-w-xs', 'clear-both');
+                } else {
+                    messageDiv.classList.add('bg-green-400', 'text-white', 'p-2', 'rounded-md', 'mb-2', 'float-left', 'max-w-xs', 'clear-both');
+                }
+
+                messageDiv.innerHTML = `
+                    <span>${chat.msg}</span><br/>
+                    <span class="text-black text-xs">${chat.uname}, ${chat.dt}</span>
+                `;
+                chatHistoryDiv.appendChild(messageDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching chat history:', error);
+        });
+}
+
+// Function to send a new message
+document.getElementById('sendMessage').addEventListener('click', function() {
+    const uname = document.getElementById('uname').value;  // User's name or ID
+    const msg = document.getElementById('msg').value;      // Message content
+
+    if (msg.trim() === '') {
+        alert('Message cannot be empty!');
+        return;  // Do not send empty messages
+    }
+
+    const messageData = {
+        uname: uname,
+        msg: msg,
+        timestamp: new Date().toISOString()  // Add a timestamp to the message
     };
-    xhr.send();
-}
 
-function displayChatHistory(chatHistory) {
-    const chatHistElement = document.getElementById("chathist");
-    chatHistElement.innerHTML = ''; // Clear existing messages
-
-    chatHistory.forEach(message => {
-        const msgElement = document.createElement('div');
-        msgElement.className = 'message'; // Tailwind for styling
-
-        msgElement.innerHTML = `
-            <strong>${message.uname}:</strong> ${message.msg}<br/>
-            <small>${message.timestamp}</small>
-        `;
-        chatHistElement.appendChild(msgElement);
+    // Send the message via a POST request
+    fetch('../api/send_chat_message.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(messageData)  // Send message data as JSON
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();  // Expecting a JSON response
+    })
+    .then(data => {
+        if (data.success) {
+            document.getElementById('msg').value = '';  // Clear the message input
+            fetchChatHistory();  // Reload chat history after sending a message
+        } else {
+            console.error('Error sending message:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
-
-    chatHistElement.scrollTop = chatHistElement.scrollHeight; // Auto-scroll to the bottom
-}
-
-// Calls function every few seconds to update the chat
-setInterval(loadMessages, 3000); // Fetch new messages every 3 seconds
-
+});

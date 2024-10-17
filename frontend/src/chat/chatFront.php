@@ -1,3 +1,6 @@
+<?php
+namespace nba\frontend\src\chat;
+?>
 <html>
 <head>
 </head>
