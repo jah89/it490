@@ -4,7 +4,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://v2.nba.api-sports.io/teams?id=11", //change team id to see different teams
+    CURLOPT_URL => "https://v2.nba.api-sports.io/teams?conference=East", // added conference to get all teams on Eat conference can be changed to West as well (change team id to get specific teams)
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
