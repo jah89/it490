@@ -46,9 +46,7 @@ abstract class Login {
                     if(static::$session == false){
                         echo("Login attempt failed, please try again.");
                     } else {
-                        $userID=static::$session->getUserId();
-                        $userID=$_POST['userID'];
-                        header('Location: /home'.'?'.$userID);
+                        header('Location: /home');
                     }
                 } 
             }

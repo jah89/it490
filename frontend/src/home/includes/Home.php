@@ -20,8 +20,21 @@ abstract class Home {
 
         <head>
         <?php echo \nba\src\lib\components\Head::displayHead();
+            $session = \nba\src\lib\SessionHandler::getSession();
+            if(!$session){
+                header('Location: /login');
+                exit();
+            }
             ?>
         </head>
+        <script>
+            // Pass session data to JavaScript
+            const sessionUser = {
+                userId: "<?php echo $session->getUserID(); ?>",
+                email: "<?php echo $session->getEmail(); ?>"
+            };
+        </script>
+        <script src="/path/to/chat.js"></script>
 
         <body>
         <div class="relative flex min-h-screen flex-col 
