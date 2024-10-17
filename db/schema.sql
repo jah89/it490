@@ -24,3 +24,11 @@ CREATE TABLE sessions (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (email) REFERENCES users(email)
 );
+
+CREATE TABLE chat_messages (
+    message_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);

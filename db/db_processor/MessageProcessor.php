@@ -359,6 +359,8 @@ class MessageProcessor
         echo "Database connection successful.\n";
 
         
+
+        
         //TODO: write logic to check request fields and query/bind for db 
         //$query = "SELECT username? user id? messages?"
 
