@@ -32,6 +32,9 @@ if ($err) {
 } else {
 	//echo $response;
 	
-	$valueNBAGames = $client->publish($response);
+	//$valueNBAGames = $client->publish($response);
+
+	$client->publish($response);
+
 
 }

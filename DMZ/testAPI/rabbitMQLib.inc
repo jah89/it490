@@ -243,7 +243,7 @@ class rabbitMQClient
 	 */
 	function publish($message)
 	{
-		//$json_message = json_encode($message);
+		$json_message = json_encode($message);
 		try
 		{
       $params = array();
