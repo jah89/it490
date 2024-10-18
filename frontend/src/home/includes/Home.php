@@ -3,10 +3,6 @@
 namespace nba\src\home\includes;
 
 abstract class Home {
-
-    //private static $session = Session::getSession();
-
-
     /**
     * Displays user's homepage.
     * @return void
@@ -26,15 +22,14 @@ abstract class Home {
                 exit();
             }
             ?>
-        </head>
-        <script>
+            <script>
             // Pass session data to JavaScript
             const sessionUser = {
-                userId: "<?php echo $session->getUserID(); ?>",
-                email: "<?php echo $session->getEmail(); ?>"
+                uname: "<?php echo htmlspecialchars($session->getEmail(), ENT_QUOTES, 'UTF-8'); ?>"
             };
         </script>
-        <script src="/path/to/chat.js"></script>
+        </head>
+
 
         <body>
         <div class="relative flex min-h-screen flex-col 
@@ -59,7 +54,9 @@ abstract class Home {
             </table>
             </div>
         </div>
-
+            <?php
+            require __DIR__.'/../../chat/chatFront.php';
+            ?>
             
             <a href="../../logout/" class="hover:text-3xl pb-20"> Logout</a>
         </body>

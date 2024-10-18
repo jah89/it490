@@ -51,8 +51,12 @@ class MessageProcessor
                 $this->processorSearchRequest($request);
                 break;
 
-            case 'chat_request':
-                $this->processorChatRequest($request);
+            case 'chat_message':
+                $this->processorChatMessage($request);
+                break;
+
+            case 'chat_history':
+                $this->processorChatHistory($request);
                 break;
 
             default:
@@ -343,7 +347,7 @@ class MessageProcessor
     /**
      * Process chat history request
      */
-    private function processorChatRequest($request)
+    private function processorChatMessage($request)
     {
 
         // Check if all required fields are present
@@ -406,7 +410,48 @@ class MessageProcessor
         $insertQuery->close();
         $db->close();
     }
-        /**
+
+    /**
+     * Function to return chat history
+     *
+     * @param integer $limit the number of messages returned
+     * @return mixed $chatHistory an array of usernames:messages from oldest to newest by timestamp
+     */
+    function processorChatHistory($limit = 10) {
+        
+        // Connect to the database
+        echo "Connecting to the database...\n";
+        $db = connectDB();
+        if ($db === null) {
+            $this->response = [
+                'type' => 'ChatHistoryResponse',
+                'status' => 'error',
+                'message' => 'Database connection failed.'
+            ];
+            return;
+        }
+        echo "Database connection successful.\n";
+    
+        // Fetch the most recent X messages, ordered by timestamp
+        $stmt = $db->prepare("SELECT uname, msg, timestamp FROM chat_messages ORDER BY timestamp DESC LIMIT ?");
+        $stmt->bind_param('i', $limit);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $chatHistory = [];
+        while ($row = $result->fetch_assoc()) {
+            $chatHistory[] = $row;  // Add each row to the chat history array
+        }
+    
+        $stmt->close();
+        $db->close();
+
+        //we flip the array to make the oldest messages go first.
+        return array_reverse($chatHistory);
+    }
+    
+
+    /**
      * Get the response to send back to the client.
      *
      * @return array The response array.
