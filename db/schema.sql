@@ -34,7 +34,51 @@ CREATE TABLE chat_messages (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+CREATE TABLE players (
+    player_id INT NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    team_id INT,
+    season YEAR,
+    country VARCHAR(100)
+);
+
+CREATE TABLE player_stats (
+    stat_id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT NOT NULL,
+    season YEAR,
+    game_date DATE NOT NULL,
+    points INT,
+    rebounds INT,
+    assists INT,
+    blocks INT,
+    steals INT,
+    FOREIGN KEY (player_id) REFERENCES players(player_id)
+);
+
+CREATE TABLE teams (
+    team_id INT NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    conference VARCHAR(50),
+    division VARCHAR(50)
+);
+
+CREATE TABLE games (
+    game_id INT NOT NULL PRIMARY KEY,
+    home_team_id INT NOT NULL,
+    visitor_team_id INT NOT NULL,
+    home_team_points INT NOT NULL,
+    visitor_team_points INT NOT NULL,
+    game_date DATETIME NOT NULL,
+    FOREIGN KEY (home_team_id) REFERENCES teams(team_id),
+    FOREIGN KEY (visitor_team_id) REFERENCES teams(team_id)
+);
+
+
+
 -- TABLES NEEDED:
 -- LEAGUES
+-- PLAYERS
 -- PLAYER DATA
--- 
+-- GAMES
+-- LEAGUE MEMBERS
