@@ -1,19 +1,22 @@
 Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
 
-     To                         Action      From
-     --                         ------      ----
-[ 1] 22/tcp                     ALLOW IN    Anywhere                  
-[ 2] 80/tcp                     ALLOW IN    Anywhere                  
-[ 3] 443/tcp                    ALLOW IN    Anywhere                  
-[ 4] 443                        ALLOW IN    Anywhere                  
-[ 5] 80                         ALLOW IN    Anywhere                  
-[ 6] 5672                       ALLOW IN    Anywhere                  
-[ 7] 22                         ALLOW IN    Anywhere                  
-[ 8] 22/tcp (v6)                ALLOW IN    Anywhere (v6)             
-[ 9] 80/tcp (v6)                ALLOW IN    Anywhere (v6)             
-[10] 443/tcp (v6)               ALLOW IN    Anywhere (v6)             
-[11] 443 (v6)                   ALLOW IN    Anywhere (v6)             
-[12] 80 (v6)                    ALLOW IN    Anywhere (v6)             
-[13] 5672 (v6)                  ALLOW IN    Anywhere (v6)             
-[14] 22 (v6)                    ALLOW IN    Anywhere (v6)             
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+80/tcp                     ALLOW IN    Anywhere                  
+443/tcp                    ALLOW IN    Anywhere                  
+443                        ALLOW IN    Anywhere                  
+80                         ALLOW IN    Anywhere                  
+5672                       ALLOW IN    Anywhere                  
+22                         ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+80/tcp (v6)                ALLOW IN    Anywhere (v6)             
+443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+443 (v6)                   ALLOW IN    Anywhere (v6)             
+80 (v6)                    ALLOW IN    Anywhere (v6)             
+5672 (v6)                  ALLOW IN    Anywhere (v6)             
+22 (v6)                    ALLOW IN    Anywhere (v6)             
 
