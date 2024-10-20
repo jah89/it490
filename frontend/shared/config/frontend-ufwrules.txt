@@ -1,0 +1,85 @@
+*filter
+:ufw-user-input - [0:0]
+:ufw-user-output - [0:0]
+:ufw-user-forward - [0:0]
+:ufw-before-logging-input - [0:0]
+:ufw-before-logging-output - [0:0]
+:ufw-before-logging-forward - [0:0]
+:ufw-user-logging-input - [0:0]
+:ufw-user-logging-output - [0:0]
+:ufw-user-logging-forward - [0:0]
+:ufw-after-logging-input - [0:0]
+:ufw-after-logging-output - [0:0]
+:ufw-after-logging-forward - [0:0]
+:ufw-logging-deny - [0:0]
+:ufw-logging-allow - [0:0]
+:ufw-user-limit - [0:0]
+:ufw-user-limit-accept - [0:0]
+### RULES ###
+
+### tuple ### allow tcp 80 0.0.0.0/0 any 0.0.0.0/0 in
+-A ufw-user-input -p tcp --dport 80 -j ACCEPT
+
+### tuple ### allow any any 0.0.0.0/0 any 172.30.103.53 in
+-A ufw-user-input -s 172.30.103.53 -j ACCEPT
+
+### tuple ### allow tcp 443 0.0.0.0/0 any 0.0.0.0/0 in
+-A ufw-user-input -p tcp --dport 443 -j ACCEPT
+
+### tuple ### allow any 53 0.0.0.0/0 any 0.0.0.0/0 out
+-A ufw-user-output -p tcp --dport 53 -j ACCEPT
+-A ufw-user-output -p udp --dport 53 -j ACCEPT
+
+### tuple ### allow any 80 0.0.0.0/0 any 0.0.0.0/0 out
+-A ufw-user-output -p tcp --dport 80 -j ACCEPT
+-A ufw-user-output -p udp --dport 80 -j ACCEPT
+
+### tuple ### allow any 443 0.0.0.0/0 any 0.0.0.0/0 out
+-A ufw-user-output -p tcp --dport 443 -j ACCEPT
+-A ufw-user-output -p udp --dport 443 -j ACCEPT
+
+### tuple ### allow any 5672 0.0.0.0/0 any 0.0.0.0/0 out
+-A ufw-user-output -p tcp --dport 5672 -j ACCEPT
+-A ufw-user-output -p udp --dport 5672 -j ACCEPT
+
+### END RULES ###
+
+### LOGGING ###
+-A ufw-after-logging-input -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-A ufw-after-logging-output -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-A ufw-after-logging-forward -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-I ufw-logging-deny -m conntrack --ctstate INVALID -j RETURN -m limit --limit 3/min --limit-burst 10
+-A ufw-logging-deny -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-A ufw-logging-allow -j LOG --log-prefix "[UFW ALLOW] " -m limit --limit 3/min --limit-burst 10
+### END LOGGING ###
+
+### RATE LIMITING ###
+-A ufw-user-limit -m limit --limit 3/minute -j LOG --log-prefix "[UFW LIMIT BLOCK] "
+-A ufw-user-limit -j REJECT
+-A ufw-user-limit-accept -j ACCEPT
+### END RATE LIMITING ###
+COMMIT
+
+
+Example of output for "sudo ufw status verbose":
+Status: active
+Logging: on (low)
+Default: deny (incoming), deny (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+80/tcp                     ALLOW IN    Anywhere                  
+Anywhere                   ALLOW IN    172.30.103.53             
+443/tcp                    ALLOW IN    Anywhere                  
+80/tcp (v6)                ALLOW IN    Anywhere (v6)             
+443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+
+53                         ALLOW OUT   Anywhere                  
+80                         ALLOW OUT   Anywhere                  
+443                        ALLOW OUT   Anywhere                  
+5672                       ALLOW OUT   Anywhere                  
+53 (v6)                    ALLOW OUT   Anywhere (v6)             
+80 (v6)                    ALLOW OUT   Anywhere (v6)             
+443 (v6)                   ALLOW OUT   Anywhere (v6)             
+5672 (v6)                  ALLOW OUT   Anywhere (v6) 
