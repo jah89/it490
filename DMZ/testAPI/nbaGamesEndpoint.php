@@ -7,7 +7,7 @@ require_once('rabbitMQLib.inc');
 $client = new rabbitMQClient("testRabbitMQ.ini","API");
 
 $curl = curl_init();
-
+/*
 curl_setopt_array($curl, [
     CURLOPT_URL => "https://v2.nba.api-sports.io/games?season=2022&league=standard", //(able to get all games played in 2022 for standard league) requires at least one parameter (league, season, date, etc)
 	CURLOPT_RETURNTRANSFER => true,
@@ -21,20 +21,41 @@ curl_setopt_array($curl, [
 		"x-rapidapi-key: c0cb78e69959e338dce6adbd219977b2"
 	],
 ]);
+*/
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
+//$response = curl_exec($curl);
+//$err = curl_error($curl);
 
 curl_close($curl);
 
-if ($err) {
+if (false) {
 	echo "cURL Error #:" . $err;
 } else {
-	//echo $response;
-	
-	//$valueNBAGames = $client->publish($response);
+	/// Wrap the response in an associative array with a type
+	/*
+    $message = [
+        'type' => 'api_game_data_request',
+        'data' => json_decode($response, true) // Decode response to associative array
+		//'data' => json_decode($response, true) // Decode response to associative array
 
-	$client->publish($response);
+    ];
+	*/
+
+	$message = [
+		'type' => 'api_game_data_request',
+		'data' => json_encode([
+			'id' => 123,
+			'home_team_id' => 1,
+			'visitor_team_id' => 2,
+			'date' => '2024-10-19T19:00:00Z',
+			'home_team_score' => 100,
+			'visitor_team_score' => 98,
+		])
+	];
+
+    // Publish the message to RabbitMQ
+	echo(print_r($message, true));
+    $client->publish(json_encode($message)); // Send as JSON string
 
 
 }
