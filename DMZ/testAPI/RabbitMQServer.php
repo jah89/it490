@@ -15,7 +15,7 @@ class RabbitMQServer
 	private string $clientExchangeName;
 	private string $serverQueueName;
 	private $routing_key = '*';
-	private $exchange_type = "classic";
+	private $exchange_type = "direct";
 	private $serverQueue;
 	private $callback;
 	private $auto_delete = false;
@@ -98,7 +98,7 @@ class RabbitMQServer
 			} else {
 				//if no response required send an ack automatically,
 				$body = $msg->getBody();
-				$payload = json_decode($body, true);
+				$request = json_decode($body, true);
                 if (isset($this->callback)) {
                     call_user_func($this->callback, $request);
                 }

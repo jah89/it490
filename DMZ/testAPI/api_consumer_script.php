@@ -6,6 +6,9 @@ require_once('APIMessageProcessor.php');
 
 // Define the callback function that will handle incoming messages
 function messageCallback($request) {
+
+    echo("Request message received: ". print_r($request,true));
+
     // Instantiate the API message processor
     $apiMessageProcessor = new APIMessageProcessor(); // Change to new class name
     
@@ -21,3 +24,14 @@ $rabbitMQServer = new RabbitMQServer(__DIR__.'/testRabbitMQ.ini','API');
 
 // Start processing requests and pass the callback function for processing messages
 $rabbitMQServer->process_requests('messageCallback');
+
+//$callback = function($message) use ($rabbitMQServer) {
+    // Process message
+    //echo "Message received: " . $message->body . "\n";
+
+    // Acknowledge the message
+    //$rabbitMQServer->getChannel()->basic_ack($message->delivery_info['delivery_tag']);
+//};
+
+//$rabbitMQServer->process_requests($callback);
+?>

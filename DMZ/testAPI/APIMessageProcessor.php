@@ -8,10 +8,54 @@ class APIMessageProcessor
 
     public function call_processor($request)
     {
+
+        // Debugging: Log the raw request
+        echo "Received request: " . $request . "\n";
+
+
+        // Decode the request if it's in JSON format
+        if (is_string($request)) {
+            $request = json_decode($request, true);
+
+            // Check for JSON decoding errors
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo "Error decoding JSON: " . json_last_error_msg() . "\n";
+            return;
+        }
+    }
+
+
+        // Debugging: Check if $request is null
+        if (is_null($request)) {
+            echo "Error: Received null request.\n";
+            return;
+        }
+        // Check if $request is an array and contains the 'type' key
+        if (!is_array($request) || !isset($request['type'])) {
+            echo "Error: Invalid request format. Expected an array with 'type'.\n";
+            return;
+        }
+
+        // Double-decode the 'data' field if it's still a JSON string
+        if (isset($request['data']) && is_string($request['data'])) {
+            $request['data'] = json_decode($request['data'], true);
+
+        // Check for JSON decoding errors in the 'data' field
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo "Error decoding the 'data' field: " . json_last_error_msg() . "\n";
+            return;
+        }
+    }
+
+        // At this point, both 'type' and 'data' should be properly decoded and accessible
+        echo "Request type: " . $request['type'] . "\n";
+        echo "Decoded data: ";
+        print_r($request['data']);
+
         switch ($request['type']) {
             case 'api_player_data_request':
                 echo("API Player Data request received");
-                $this->processorAPIPlayerDataRequest($request);
+                $this->processAPIPlayerDataRequest($request);
                 break;
             
             case 'api_player_stats_request':
@@ -21,7 +65,7 @@ class APIMessageProcessor
 
             case 'api_team_data_request':
                 echo("API Team Data request received");
-                $this->processorAPITeamsDataRequest($request);
+                $this->processAPITeamsDataRequest($request);
                 break;
 
             case 'api_game_data_request':
@@ -36,35 +80,53 @@ class APIMessageProcessor
                 break;
         }
     }
-private function processAPIPlayerDataRequest($jsonData)
+private function processAPIPlayerDataRequest($request)
 {
-    $data = json_decode($jsonData, true);  // Decode the JSON data
-    
-    if (!$data) {
-        echo "Error decoding JSON data\n";
+    // Check if 'data' key exists and is valid
+    if (!isset($request['data']) || !isset($request['data']['response'])) {
+        echo "Error: Invalid data format.\n";
         return;
     }
+
+        // Access the response directly
+        $data = $request['data']['response']; // Correctly access the response array
 
         // Create a database connection
         $conn = connectDb();  // Use the existing database connection
 
         // Insert into players table
-        $stmt = $conn->prepare("INSERT INTO players (player_id, name, team_id, season, country) 
+        $stmt = $conn->prepare("INSERT INTO players (player_id, name, country, position, weight) 
                                 VALUES (?, ?, ?, ?, ?)
-                                ON DUPLICATE KEY UPDATE name = ?, team_id = ?, season = ?, country = ?");
+                                ON DUPLICATE KEY UPDATE name = ?, country = ?, position = ?, weight = ?");
+
+        // Loop through the players array
+        foreach ($data as $player) {
+            if (!isset($player['id'])) {
+                echo "Error: Player ID not found.\n";
+                continue; // Skip this player
+            }
+
+            $playerId = $player['id']; // Assign the player ID
+            echo "Processing player ID: $playerId\n"; // Debugging output
+
+            // Extract other player details (you can add checks for these too)
+            $name = $player['firstname'] . ' ' . $player['lastname'];
+            $position = $player['leagues']['standard']['pos'];
+            $weight = $player['weight']['pounds'];
+            $country = $player['birth']['country'];
 
         // Bind parameters
         $stmt->bind_param(
-            "issssisss",  // Parameter types: i = integer, s = string
-            $data['id'],
-            $data['name'],
-            $data['team'],
-            $data['season'],
-            $data['country'],
-            $data['name'],     // For ON DUPLICATE KEY UPDATE
-            $data['team'],     // For ON DUPLICATE KEY UPDATE
-            $data['season'],   // For ON DUPLICATE KEY UPDATE
-            $data['country']   // For ON DUPLICATE KEY UPDATE
+            "issssisss",
+            $playerId,
+            $name,
+            $position,
+            $weight,
+            $country,
+            $name, 
+            $position, 
+            $weight, 
+            $country
         );
 
         // Execute the statement
@@ -73,10 +135,12 @@ private function processAPIPlayerDataRequest($jsonData)
         } else {
             echo "Error executing statement: " . $stmt->error . "\n";
         }
+    }
 
         $stmt->close(); // Close the statement
         $conn->close(); // Close the connection
     }
+
 
 private function processAPIPlayerStatsRequest($jsonData)
 {
@@ -118,15 +182,17 @@ private function processAPIPlayerStatsRequest($jsonData)
     $conn->close(); // Close the connection
 }
 
-    private function processAPITeamsDataRequest($jsonData)
+    private function processAPITeamsDataRequest($request)
 {
-    // Decode the JSON data
-    $data = json_decode($jsonData, true);  
     
-    if (!$data || !isset($data['response'])) {
-        echo "Error decoding JSON data or invalid format\n";
+    // Check if 'data' key exists and is valid
+    if (!isset($request['data']) || !isset($request['data']['response'])) {
+        echo "Error: Invalid data format.\n";
         return;
     }
+
+    // Access the response directly
+    $data = $request['data'];
 
     // Create a database connection
     $conn = connectDb();  // Reuse the existing database connection
