@@ -1,10 +1,15 @@
 #!/usr/bin/php
 <?php
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+
+$client = new rabbitMQClient("testRabbitMQ.ini","API");
 
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://v2.nba.api-sports.io/players?team=1&season=2021&country=USA",
+    CURLOPT_URL => "https://v2.nba.api-sports.io/players?country=USA", // gets all players for country USA
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -17,6 +22,7 @@ curl_setopt_array($curl, [
 	],
 ]);
 
+
 $response = curl_exec($curl);
 $err = curl_error($curl);
 
@@ -25,5 +31,32 @@ curl_close($curl);
 if ($err) {
 	echo "cURL Error #:" . $err;
 } else {
-	echo $response;
+	/// Wrap the response in an associative array with a type
+	
+    $message = [
+        'type' => 'api_player_data_request',
+        'data' => $response // Decode response to associative array
+		//'data' => json_decode($response, true) // Decode response to associative array
+
+    ];
+	
+/*
+	$message = [
+		'type' => 'api_game_data_request',
+		'data' => [
+			'id' => 123,
+			'home_team_id' => 1,
+			'visitor_team_id' => 2,
+			'date' => '2024-10-19T19:00:00Z',
+			'home_team_score' => 100,
+			'visitor_team_score' => 98,
+		]
+	];
+	*/
+
+    // Publish the message to RabbitMQ
+	echo(print_r($message, true));
+    $client->publish(json_encode($message)); // Send as JSON string
+
+
 }

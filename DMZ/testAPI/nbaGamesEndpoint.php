@@ -7,7 +7,7 @@ require_once('rabbitMQLib.inc');
 $client = new rabbitMQClient("testRabbitMQ.ini","API");
 
 $curl = curl_init();
-
+//needs to be changed to handle game data
 curl_setopt_array($curl, [
     //CURLOPT_URL => "https://v2.nba.api-sports.io/games?season=2022&league=standard", //(able to get all games played in 2022 for standard league) requires at least one parameter (league, season, date, etc)
 	CURLOPT_URL => "https://v2.nba.api-sports.io/players?id=183",
