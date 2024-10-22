@@ -1,6 +1,1 @@
 
-PHP Fatal error:  Failed to start request processor: AMQPConnectionException: Socket error: could not connect to host. in /home/enisakil/git/it490/DMZ/testAPI/RabbitMQServer.php:137
-Stack trace:
-#0 /home/enisakil/git/it490/DMZ/testAPI/RabbitMQServer.php(137): AMQPConnection->connect()
-#1 /home/enisakil/git/it490/DMZ/testAPI/api_consumer_script.php(23): RabbitMQServer->process_requests()
-#2 {main} in /home/enisakil/git/it490/DMZ/testAPI/RabbitMQServer.php on line 162

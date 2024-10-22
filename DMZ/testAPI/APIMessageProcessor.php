@@ -111,22 +111,23 @@ private function processAPIPlayerDataRequest($request)
 
             // Extract other player details (you can add checks for these too)
             $name = $player['firstname'] . ' ' . $player['lastname'];
-            $position = $player['leagues']['standard']['pos'];
-            $weight = $player['weight']['pounds'];
-            $country = $player['birth']['country'];
+            $position = isset($player['leagues']['standard']['pos']) ? $player['leagues']['standard']['pos'] : 'N/A';
+            $weight = isset($player['weight']['pounds']) ? $player['weight']['pounds'] : 0;  // Default to 0 if not available
+            $country = isset($player['birth']['country']) ? $player['birth']['country'] : 'Unknown';
+
 
         // Bind parameters
         $stmt->bind_param(
-            "issssisss",
+            "isssisssi",
             $playerId,
             $name,
+            $country,
             $position,
             $weight,
-            $country,
             $name, 
+            $country, 
             $position, 
-            $weight, 
-            $country
+            $weight
         );
 
         // Execute the statement
@@ -142,34 +143,70 @@ private function processAPIPlayerDataRequest($request)
     }
 
 
-private function processAPIPlayerStatsRequest($jsonData)
+private function processAPIPlayerStatsRequest($request)
 {
-    $data = json_decode($jsonData, true);  // Decode JSON data
-        
-    if (!$data) {
-        echo "Error decoding JSON data\n";
+    // Check if 'data' key exists and is valid
+    if (!isset($request['data']) || !isset($request['data']['response'])) {
+        echo "Error: Invalid data format.\n";
         return;
     }
+
+    // Access the response directly
+    $data = $request['data']['response']; // Correctly access the response array
 
     // Create a database connection
     $conn = connectDb();  // Reuse existing database connection
 
+    // Get the player ID from parameters
+    $playerId = $request['data']['parameters']['id'] ?? null;
+    if (!$playerId) {
+        echo "Error: Player ID not found in parameters.\n";
+        return;
+    }
+
+    // Get the season from parameters
+    $season = $request['data']['parameters']['season'] ?? null;
+    if (!$season) {
+        echo "Error: Season not found in parameters.\n";
+        return;
+    }
+
     // Prepare the SQL statement for inserting player stats
-    $stmt = $conn->prepare("INSERT INTO player_stats (player_id, season, game_date, points, rebounds, assists, blocks, steals) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO player_stats (player_id, season, game_id, points, rebounds, assists, blocks, steals) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            ON DUPLICATE KEY UPDATE 
+                            season = ?, game_id = ?, points = ?, rebounds = ?, assists = ?, blocks = ?, steals = ?");
     
-    // Bind parameters
-    $stmt->bind_param(
-        "issiiiii",  // Parameter types: i = integer, s = string
-        $data['player_id'],
-        $data['season'],
-        $data['game_date'],
-        $data['points'],
-        $data['rebounds'],
-        $data['assists'],
-        $data['blocks'],
-        $data['steals']
-    );
+    // Loop through the player stats data
+    foreach ($data as $stat) {
+        // Get the game ID from the response
+        $gameId = $stat['game']['id'] ?? null; // Default to NULL if not available
+        $points = isset($stat['points']) ? (int)$stat['points'] : null; // Default to NULL if not available
+        $rebounds = isset($stat['totReb']) ? (int)$stat['totReb'] : null; // Extract total rebounds
+        $assists = isset($stat['assists']) ? (int)$stat['assists'] : null; // Default to NULL if not available
+        $blocks = isset($stat['blocks']) ? (int)$stat['blocks'] : null; // Default to NULL if not available
+        $steals = isset($stat['steals']) ? (int)$stat['steals'] : null; // Default to NULL if not available
+
+    
+        // Bind parameters
+        $stmt->bind_param(
+            "isiiiiiisiiiiii",  // Updated parameter types: i = integer, s = string
+            $playerId,
+            $season,
+            $gameId,
+            $points,
+            $rebounds,
+            $assists,
+            $blocks,
+            $steals,
+            $season,
+            $gameId,
+            $points,
+            $rebounds,
+            $assists,
+            $blocks,
+            $steals
+        );
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -177,6 +214,7 @@ private function processAPIPlayerStatsRequest($jsonData)
     } else {
         echo "Error executing statement: " . $stmt->error . "\n";
     }
+}
     // Close the statement and connection
     $stmt->close(); // Close the statement
     $conn->close(); // Close the connection
@@ -238,39 +276,61 @@ private function processAPIPlayerStatsRequest($jsonData)
         $conn->close(); // Close the connection
 }
 
-private function processAPIGameDataRequest($jsonData) {
-    // Decode the JSON data
-    $games = json_decode($jsonData, true); // Decoding as an associative array
+private function processAPIGameDataRequest($request) {
 
-    // Check if decoding was successful
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        echo "Error decoding JSON: " . json_last_error_msg();
+    // Check if 'data' key exists and is valid
+    if (!isset($request['data']) || !isset($request['data']['response'])) {
+        echo "Error: Invalid data format.\n";
         return;
     }
 
+    // Access the response directly
+    $data = $request['data']['response']; // Correctly access the response array
+    
+
     // Create a database connection
     $conn = connectDb(); // Ensure this function is defined to return a valid DB connection
+    
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO games (game_id, home_team_id, visitor_team_id, date, home_team_score, visitor_team_score) VALUES (?, ?, ?, ?, ?, ?)");
+    // Assuming $data contains the response from the API
+    foreach ($data as $game) {
+        // Extract the game details
+        $gameId = $game['id'] ?? null;
+        $homeTeamId = $game['teams']['home']['id'] ?? null;
+        $visitorTeamId = $game['teams']['visitors']['id'] ?? null;
 
-    // Loop through the games data
-    foreach ($games as $game) {
-        // Extract relevant data
-        $game_id = $game['id'];
-        $home_team_id = $game['teams']['home']['id'];
-        $visitor_team_id = $game['teams']['visitors']['id'];
-        $date = $game['date']['start']; // Start date of the game
-        $home_team_score = $game['scores']['home']['points'];
-        $visitor_team_score = $game['scores']['visitors']['points'];
+        // Extract the start date
+        $date = $game['date']['start'] ?? null; // This will give you the start date in ISO 8601 format
+        if ($date) {
+            // Convert the ISO 8601 date to MySQL DATETIME format
+            $dateTime = date('Y-m-d H:i:s', strtotime($date));
+        } else {
+            // Handle the case where date is not available
+            $dateTime = null; // Or set a default value
+        }
+        $homeTeamScore = $game['scores']['home']['points'] ?? null;
+        $visitorTeamScore = $game['scores']['visitors']['points'] ?? null;
+
+        //Prepare the SQL statement for inserting or updating game data
+        $stmt = $conn->prepare("
+            INSERT INTO games (game_id, home_team_id, visitor_team_id, game_date, home_team_points, visitor_team_points) 
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE 
+                home_team_id = VALUES(home_team_id),
+                visitor_team_id = VALUES(visitor_team_id),
+                game_date = VALUES(game_date),
+                home_team_points = VALUES(home_team_points),
+                visitor_team_points = VALUES(visitor_team_points)
+        ");
 
         // Bind parameters
-        $stmt->bind_param("iiisii", $game_id, $home_team_id, $visitor_team_id, $date, $home_team_score, $visitor_team_score);
+        $stmt->bind_param("iiisii", $gameId, $homeTeamId, $visitorTeamId, $dateTime, $homeTeamScore, $visitorTeamScore);
 
         // Execute the statement
-        if (!$stmt->execute()) {
-            // Handle error
-            echo "Error: " . $stmt->error;
+        if ($stmt->execute()) {
+            echo "Game inserted successfully\n";
+        } else {
+            echo "Error executing statement: " . $stmt->error . "\n";
         }
     }
 
@@ -278,6 +338,11 @@ private function processAPIGameDataRequest($jsonData) {
     $stmt->close();
     $conn->close();
 }
+
+public function getResponse()
+    {
+        return $this->response;
+    }
 
 
 
