@@ -146,7 +146,7 @@ class RabbitMQServer
 
 			$this->serverQueue = new \AMQPQueue($channel);
 			$this->serverQueue->setName($this->serverQueueName);
-            $this->serverQueue->setFlags(\AMQP_DURABLE);  // Ensure that the queue is declared as durable
+            $this->serverQueue->setFlags(\AMQP_DURABLE | \AMQP_AUTODELETE);  // Ensure that the queue is declared as durable
             $this->serverQueue->declareQueue();  // Now declare the queue
 			$this->serverQueue->bind($exchange->getName(),$this->routing_key);
 			$this->serverQueue->consume(array($this,'process_message'));
