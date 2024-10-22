@@ -17,16 +17,21 @@ abstract class Home {
         <head>
         <?php echo \nba\src\lib\components\Head::displayHead();
             $session = \nba\src\lib\SessionHandler::getSession();
+            error_log("session" . $session . print_r($session, true));
             if(!$session){
                 header('Location: /login');
                 exit();
+            } else {
+                $fullEmail = htmlspecialchars($session->getEmail(), ENT_QUOTES, 'UTF-8');
+                $endUname = strlen($fullEmail)- (strpos($fullEmail, '@'));
+                $uname =   substr($fullEmail, 0, $endUname);
             }
             ?>
             <script>
             // Pass session data to JavaScript
             const sessionUser = {
-                uname: "<?php echo htmlspecialchars($session->getEmail(), ENT_QUOTES, 'UTF-8'); ?>"
-            };
+                uname: <?php echo($uname);?> 
+            }
         </script>
         </head>
 

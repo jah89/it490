@@ -47,11 +47,11 @@ class Session {
     public function __construct(
         string $sessionToken,
         int $expirationTimestamp,
-        string $userID,
+        //string $userID,
         string $email
     ) {
         $this->email             = $email;
-        $this->userID            = $userID;
+        //$this->userID            = $userID;
         $this->sessionToken      = $sessionToken;
         $this->expirationTimestamp  = $expirationTimestamp;
     } //end of contstructor

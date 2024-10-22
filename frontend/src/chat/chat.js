@@ -1,5 +1,6 @@
 /**
  * JavaScript that handles chat functionality
+ * from https://www.geeksforgeeks.org/online-group-chat-application-using-php/
  */
 
 /* Fetch chat history when the page loads*/

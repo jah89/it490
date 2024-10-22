@@ -38,11 +38,10 @@ class SessionValidateRequest  extends SessionRequest
      *
      * @param boolean $result True for validation, false if not valid or there is an error.
      */
-    public function __construct(string $type= 'validate_request', string $sessionToken, int $expirationTimestamp)
+    public function __construct(string $type= 'validate_request', string $sessionToken)
     {
         $this->type = $type;
         $this->sessionToken = $sessionToken;
-        $this->expirationTimestamp = $expirationTimestamp;
 
     }
 
@@ -50,10 +49,8 @@ class SessionValidateRequest  extends SessionRequest
         {
             return [
                 'type' => $this->type,
-                'payload' => [
-                    'token' => $this->sessionToken,
-                    'timestamp' => $this->expirationTimestamp,
-                ]
+                'token' => $this->sessionToken,
+
             ];
         }
 

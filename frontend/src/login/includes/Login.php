@@ -12,7 +12,7 @@ abstract class Login {
     private static false|\nba\shared\Session $session;
 
     private static function handleLogin() {
-        error_log(print_r($_POST["email"]));
+        //error_log(print_r($_POST["email"]));
         try{
             if (isset($_POST["email"]) && isset($_POST["password"])) {
                 $email = filter_input(INPUT_POST,'email');
@@ -45,9 +45,7 @@ abstract class Login {
 
                     if(static::$session == false){
                         echo("Login attempt failed, please try again.");
-                    } else {
-                        header('Location: /home');
-                    }
+                    } 
                 } 
             }
         }catch(\Exception $e){

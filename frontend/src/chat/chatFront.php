@@ -1,4 +1,8 @@
 <?php
+/**
+ * server-side chat logic
+ * source from https://www.geeksforgeeks.org/online-group-chat-application-using-php/
+ */
 namespace nba\frontend\src\chat;
 ?>
 <html>

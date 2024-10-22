@@ -28,27 +28,29 @@ abstract class SessionHandler {
 
         //check for session cookie being set
         if (!isset($_COOKIE[$cookieName])) {
+            error_log("cookie is not set");
             return false; // No cookie found, return false
         }
+        error_log("current cookie" . var_export($_COOKIE, true));
+        $cookieValue = $_COOKIE[$cookieName] ?? null;
+        error_log("the current cookie value: " .$cookieValue);
 
-        $cookieValue = ($_COOKIE($cookieName) ?? null);
-        $expirationTimestamp = $_COOKIE[$cookieName . '_expires'] ?? null;
-
-        if ($cookieValue === null || $expirationTimestamp === null) {
+        if ($cookieValue === null) {
             return false;
         }//end if
-
-        $request = new \nba\shared\messaging\frontend\SessionValidateRequest('validate_request', $cookieValue, $expirationTimestamp);
-        $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+    }
+        error_log("sending validate request");
+        $request = new \nba\shared\messaging\frontend\SessionValidateRequest('validate_request', $cookieValue);
+        $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../rabbit/host.ini', "Authentication");
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
         $responseData = json_decode($response, true);
-        $responsePayload = $responseData['payload'];
-        if($responseData['type'] === 'login_response' && $responsePayload['result'] == true) {
+        error_log("response for validation request received: ". print_r($responseData, true));
+        if($responseData['type'] === 'login_response' && $responseData['result'] == true) {
             static::$session = new \nba\shared\Session(
-                $responsePayload['token'],
-                $responsePayload['expiration'],
-                $responsePayload['userID'],
-                $responsePayload['email']
+                $responseData['token'],
+                $responseData['expiration'],
+                //$responseData['userID'],
+                $responseData['email']
             );
                 return static::$session;
             } else {
@@ -57,7 +59,7 @@ abstract class SessionHandler {
         //return session if already set
         return static::$session;
         }
-}
+
 
     /**
      * Sends login request to DB-side via RabbitMQ. 
@@ -104,6 +106,7 @@ abstract class SessionHandler {
                         false,
                         true
                     );
+                        header('Location: /home');
                     //error_log('Expiration Timestamp: ' . static::$session->getExpirationTimestamp());
 
                     //error_log('cookie was set  '. print_r($_COOKIE, true));
