@@ -9,8 +9,7 @@ $client = new rabbitMQClient("testRabbitMQ.ini","API");
 $curl = curl_init();
 //needs to be changed to handle game data
 curl_setopt_array($curl, [
-    //CURLOPT_URL => "https://v2.nba.api-sports.io/games?season=2022&league=standard", //(able to get all games played in 2022 for standard league) requires at least one parameter (league, season, date, etc)
-	CURLOPT_URL => "https://v2.nba.api-sports.io/players?id=183",
+    CURLOPT_URL => "https://v2.nba.api-sports.io/games?date=2022-03-12", //(able to get all games played in 2022 for standard league) requires at least one parameter (league, season, date, etc)
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -37,23 +36,9 @@ if ($err) {
     $message = [
         'type' => 'api_game_data_request',
         'data' => $response // Decode response to associative array
-		//'data' => json_decode($response, true) // Decode response to associative array
 
     ];
-	
-/*
-	$message = [
-		'type' => 'api_game_data_request',
-		'data' => [
-			'id' => 123,
-			'home_team_id' => 1,
-			'visitor_team_id' => 2,
-			'date' => '2024-10-19T19:00:00Z',
-			'home_team_score' => 100,
-			'visitor_team_score' => 98,
-		]
-	];
-	*/
+
 
     // Publish the message to RabbitMQ
 	echo(print_r($message, true));

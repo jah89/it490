@@ -1,10 +1,15 @@
 #!/usr/bin/php
 <?php
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+
+$client = new rabbitMQClient("testRabbitMQ.ini","API");
 
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://v2.nba.api-sports.io/players/statistics?id=734&season=2020", //need to specify season to get player stats
+    CURLOPT_URL => "https://v2.nba.api-sports.io/players/statistics?id=20&season=2023", //need to specify season to get player stats
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -17,6 +22,7 @@ curl_setopt_array($curl, [
 	],
 ]);
 
+
 $response = curl_exec($curl);
 $err = curl_error($curl);
 
@@ -25,5 +31,17 @@ curl_close($curl);
 if ($err) {
 	echo "cURL Error #:" . $err;
 } else {
-	echo $response;
+	
+    $message = [
+        'type' => 'api_player_stats_request',
+        'data' => $response 
+
+    ];
+	
+
+    // Publish the message to RabbitMQ
+	echo(print_r($message, true)); //debug statement to see what data looks like before being sent
+    $client->publish(json_encode($message)); // Send as JSON string
+
+
 }
