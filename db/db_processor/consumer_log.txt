@@ -1,15 +1,489 @@
 
 
-PHP Fatal error:  Failed to start request processor: AMQPException: Library error: heartbeat timeout, connection closed in /home/enisakil/git/it490/db/RabbitMQServer.php:152
-Stack trace:
-#0 /home/enisakil/git/it490/db/RabbitMQServer.php(152): AMQPQueue->consume()
-#1 /home/enisakil/git/it490/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
-#2 {main} in /home/enisakil/git/it490/db/RabbitMQServer.php on line 162
-
-Login successful. User ID: 6. Preparing tPHP Fatal error:  Failed to start request processor: AMQPException: Library error: heartbeat timeout, connection closed in /home/enisakil/git/it490/db/RabbitMQServer.php:152
-Stack trace:
-#0 /home/enisakil/git/it490/db/RabbitMQServer.php(152): AMQPQueue->consume()
-#1 /home/enisakil/git/it490/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
-#2 {main} in /home/enisakil/git/it490/db/RabbitMQServer.php on line 162
-/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
-#2 {main} in /home/enisakil/git/it490/db/RabbitMQServer.php on line 162
+request:   {"type":"register_request","email":"bob@test.com","password":"Test44!!"}
+Array
+(
+    [type] => register_request
+    [email] => bob@test.com
+    [password] => Test44!!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is not registered. Proceeding with registration.
+User registered successfully.
+request:   {"type":"register_request","email":"Bob@test.com","password":"Bob12345!"}
+Array
+(
+    [type] => register_request
+    [email] => Bob@test.com
+    [password] => Bob12345!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is already registered: Bob@test.com
+request:   {"type":"register_request","email":"Bob@test.com","password":"Bob12345!"}
+Array
+(
+    [type] => register_request
+    [email] => Bob@test.com
+    [password] => Bob12345!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is already registered: Bob@test.com
+request:   {"type":"register_request","email":"bob@test.com","password":"Test44!!"}
+Array
+(
+    [type] => register_request
+    [email] => bob@test.com
+    [password] => Test44!!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is already registered: bob@test.com
+request:   {"type":"register_request","email":"Bob@test.com","password":"Bob12345!"}
+Array
+(
+    [type] => register_request
+    [email] => Bob@test.com
+    [password] => Bob12345!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is already registered: Bob@test.com
+request:   {"type":"login_request","email":"Bob@test.com","password":"Bob12345!"}
+Array
+(
+    [type] => login_request
+    [email] => Bob@test.com
+    [password] => Bob12345!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => Bob@test.com
+    [password] => Bob12345!
+)
+1Set Email and Password
+Number of rows found: 0
+Login failed: Invalid email or password.
+request:   {"type":"register_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => register_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is not registered. Proceeding with registration.
+User registered successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717b81327b39
+Timestamp: 1729629299
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"register_request","email":"Joe@test.com","password":"Joe12345!"}
+Array
+(
+    [type] => register_request
+    [email] => Joe@test.com
+    [password] => Joe12345!
+)
+Starting registration process...
+Connecting to the database...
+Successfully connected to database.
+Database connection successful.
+Email is not registered. Proceeding with registration.
+User registered successfully.
+request:   {"type":"login_request","email":"Joe@test.com","password":"Joe12345!"}
+Array
+(
+    [type] => login_request
+    [email] => Joe@test.com
+    [password] => Joe12345!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => Joe@test.com
+    [password] => Joe12345!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 9. Preparing to insert session information.
+Token: 6717b8c0975fe
+Timestamp: 1729629472
+Email: Joe@test.com
+User ID: 9
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717b90c6857d
+Timestamp: 1729629548
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717b975f34ee
+Timestamp: 1729629653
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717b9c12462d
+Timestamp: 1729629729
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717ba58943c2
+Timestamp: 1729629880
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717ba7a4f392
+Timestamp: 1729629914
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717babfbaf8e
+Timestamp: 1729629983
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717bb1bd54f0
+Timestamp: 1729630075
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717bb454263b
+Timestamp: 1729630117
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717bc27161d4
+Timestamp: 1729630343
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717bdad2b4d8
+Timestamp: 1729630733
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717bdf9a959e
+Timestamp: 1729630809
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"validate_request","token":"6717bdf9a959e"}
+Array
+(
+    [type] => validate_request
+    [token] => 6717bdf9a959e
+)
+Unknown request type: validate_request
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717c150062e4
+Timestamp: 1729631664
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"validate_request","token":"6717c150062e4"}
+Array
+(
+    [type] => validate_request
+    [token] => 6717c150062e4
+)
+Unknown request type: validate_request
+request:   {"type":"login_request","email":"jane@test.com","password":"Test44!!"}
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+login request receivedConnecting to the database...
+Successfully connected to database.
+Database connection successful.
+Array
+(
+    [type] => login_request
+    [email] => jane@test.com
+    [password] => Test44!!
+)
+1Set Email and Password
+Number of rows found: 1
+Login successful. User ID: 8. Preparing to insert session information.
+Token: 6717c1ab66605
+Timestamp: 1729631755
+Email: jane@test.com
+User ID: 8
+Session information inserted successfully.
+request:   {"type":"validate_request","token":"6717c1ab66605"}
+Array
+(
+    [type] => validate_request
+    [token] => 6717c1ab66605
+)
+Unknown request type: validate_request
