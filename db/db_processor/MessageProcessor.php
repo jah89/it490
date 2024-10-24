@@ -306,12 +306,17 @@ class MessageProcessor
         $currentTimestamp = time();
 
         // Check if the session is expired
-        if ($sessionData['timestamp'] > $currentTimestamp - (3 * 3600)) {
-            // Session is valid and not expired
+        if ($sessionData['timestamp'] > $currentTimestamp) {
+            /*Session is valid and not expired
+            Now now return data from db to validate/return session*/
+            
             $this->response = [
                 'type' => 'SessionValidationResponse',
                 'status' => 'success',
-                'message' => "Session is valid for email: " . $sessionData['email']
+                'message' => "Session is valid for email: " . $sessionData['email'],
+                'email' => $sessionData['email'],
+                'session_token' => $sessionData['token'],
+                'expiration_timestamp' => $sessionData['timestamp']
             ];
         } else {
             // Session is expired
@@ -320,7 +325,7 @@ class MessageProcessor
                 'status' => 'error',
                 'message' => "Session has expired for token: $sessionToken"
             ];
-        }
+            }
     } else {
         // Invalid session token
         $this->response = [
@@ -328,7 +333,7 @@ class MessageProcessor
             'status' => 'error',
             'message' => "Invalid session token: $sessionToken"
         ];
-    }
+        }
 
         // Close the database connection
         $db->close();

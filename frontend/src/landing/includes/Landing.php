@@ -19,8 +19,11 @@ abstract class Landing {
 
         <head>
             
-           <?php //include __DIR__.'/../../lib/components/Head.inc.php';
+           <?php 
            echo \nba\src\lib\components\Head::displayHead();
+           echo \nba\src\lib\components\Nav::displayNav();
+           
+           
             ?>
 </head>
 

@@ -45,11 +45,12 @@ abstract class SessionHandler {
         $response = $rabbitClient->send_request(json_encode($request), 'application/json');
         $responseData = json_decode($response, true);
         error_log("response for validation request received: ". print_r($responseData, true));
-        if($responseData['type'] === 'login_response' && $responseData['result'] == true) {
+        if($responseData['type'] === 'SessionValidationResponse' && $responseData['status'] === 'success') {
+            /*log success message and create session object*/
+            error_log($responseData['message']);
             static::$session = new \nba\shared\Session(
                 $responseData['token'],
                 $responseData['expiration'],
-                //$responseData['userID'],
                 $responseData['email']
             );
                 return static::$session;
@@ -83,9 +84,8 @@ abstract class SessionHandler {
             static::$session = new \nba\shared\Session(
                 $response['session_token'],
                 $response['expiration_timestamp'],
-                //$response['userID'],
                 $response['email']
-            );
+                        );
             //error_log('session setting issue' . print_r(static::$session, true));
 
         } else {

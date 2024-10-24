@@ -29,12 +29,6 @@ class Session {
      */
     private int $expirationTimestamp;
 
-    /**
-     * User's ID.
-     *
-     * @var string $userID is the ID of user.
-     */
-    private string $userID;
 
     /**
     * Constructor to create a new session.
@@ -47,11 +41,9 @@ class Session {
     public function __construct(
         string $sessionToken,
         int $expirationTimestamp,
-        //string $userID,
-        string $email
+        string $email,
     ) {
         $this->email             = $email;
-        //$this->userID            = $userID;
         $this->sessionToken      = $sessionToken;
         $this->expirationTimestamp  = $expirationTimestamp;
     } //end of contstructor
@@ -90,16 +82,6 @@ class Session {
 
     }
 
-    /**
-     * Gets the user ID.
-     *
-     * @return string userID.
-     */
-    public function getUserId()
-    {
-        return $this->userID;
-
-    }//end getUserId()
 //end getters
 
 }//end Session class

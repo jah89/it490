@@ -66,7 +66,10 @@ abstract class Login {
     <html lang='en'>
 
         <head>
-            <?php echo \nba\src\lib\components\Head::displayHead(); ?> 
+            <?php echo \nba\src\lib\components\Head::displayHead();
+           echo \nba\src\lib\components\Nav::displayNav();?>
+           
+           
         </head>
 
         <body>

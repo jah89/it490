@@ -3,6 +3,9 @@
 namespace nba\src\home\includes;
 
 abstract class Home {
+
+    private static false|\nba\shared\Session $session;
+
     /**
     * Displays user's homepage.
     * @return void
@@ -16,13 +19,13 @@ abstract class Home {
 
         <head>
         <?php echo \nba\src\lib\components\Head::displayHead();
-            $session = \nba\src\lib\SessionHandler::getSession();
-            error_log("session" . $session . print_r($session, true));
-            if(!$session){
+            static::$session = \nba\src\lib\SessionHandler::getSession();
+            error_log("session" . static::$session . print_r(static::$session, true));
+            if(!static::$session){
                 header('Location: /login');
                 exit();
             } else {
-                $fullEmail = htmlspecialchars($session->getEmail(), ENT_QUOTES, 'UTF-8');
+                $fullEmail = htmlspecialchars(static::$session->getEmail(), ENT_QUOTES, 'UTF-8');
                 $endUname = strlen($fullEmail)- (strpos($fullEmail, '@'));
                 $uname =   substr($fullEmail, 0, $endUname);
             }
@@ -60,7 +63,7 @@ abstract class Home {
             </div>
         </div>
             <?php
-            require __DIR__.'/../../chat/chatFront.php';
+            require __DIR__.'/../..lib//chat/chatFront.php';
             ?>
             
             <a href="../../logout/" class="hover:text-3xl pb-20"> Logout</a>
