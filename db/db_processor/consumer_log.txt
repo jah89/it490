@@ -487,3 +487,8 @@ Array
     [token] => 6717c1ab66605
 )
 Unknown request type: validate_request
+PHP Fatal error:  Failed to start request processor: AMQPException: Library error: heartbeat timeout, connection closed in /home/enisakil/git/it490/db/RabbitMQServer.php:152
+Stack trace:
+#0 /home/enisakil/git/it490/db/RabbitMQServer.php(152): AMQPQueue->consume()
+#1 /home/enisakil/git/it490/db/db_processor/consumer_script.php(23): RabbitMQServer->process_requests()
+#2 {main} in /home/enisakil/git/it490/db/RabbitMQServer.php on line 162

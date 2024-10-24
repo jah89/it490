@@ -30,7 +30,7 @@ class RabbitMQServer
 		$this->USER     		    = $this->machine[$server]["USER"];
 		$this->PASSWORD 		    = $this->machine[$server]["PASSWORD"];
 		$this->VHOST 			    = $this->machine[$server]["VHOST"];
-		$this->clientExchangeName   = $this->machine[$server]['SERVER_EXCHANGE']; 
+		$this->clientExchangeName   = $this->machine[$server]['EXCHANGE']; 
 		if (isset( $this->machine[$server]["EXCHANGE_TYPE"]))
 		{
 			$this->exchange_type = $this->machine[$server]["EXCHANGE_TYPE"];
