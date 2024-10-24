@@ -9,7 +9,7 @@ include(__DIR__.'/../../lib/sanitizers.php');
  */
 abstract class Login {
 
-    private static false|\nba\shared\Session $session;
+    private false|\nba\shared\Session $session;
 
     private static function handleLogin() {
         //error_log(print_r($_POST["email"]));
@@ -41,9 +41,9 @@ abstract class Login {
                 }
 
                 if (!$hasError) {
-                    static::$session = \nba\src\lib\SessionHandler::login($email, $password);
+                    $session = \nba\src\lib\SessionHandler::login($email, $password);
 
-                    if(static::$session == false){
+                    if($session == false){
                         echo("Login attempt failed, please try again.");
                     } 
                 } 

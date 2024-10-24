@@ -47,6 +47,10 @@ class MessageProcessor
                 $this->processorSessionValidation($request);
                 break;
 
+            case 'admin_check_request':
+                $this->processorAdminCheckRequest($request);
+                break;
+
             case 'search_request':
                 $this->processorSearchRequest($request);
                 break;
@@ -343,10 +347,70 @@ class MessageProcessor
     /**
      * Process SearchRequest message.
      */
-    private function processorSearchRequest($request)
+    private function processorAdminCheckRequest($request)
     {
 
-        // Perform search logic here
+        // Check if all required fields are present
+        if (empty($request['email'])) {
+            $this->response = [
+                'type' => 'AdminCheckResponse',
+                'status' => 'error',
+                'message' => 'Missing required fields.'
+            ];
+            return;
+        }
+
+        // Connect to the database
+        echo "Connecting to the database...\n";
+        $db = connectDB();
+        if ($db === null) {
+            $this->response = [
+                'type' => 'AdminCheckResponse',
+                'status' => 'error',
+                'message' => 'Database connection failed.'
+            ];
+            return;
+        }
+        echo "Database connection successful.\n";
+
+        $email = $request['email'];
+
+
+        // Prepare and execute insert query
+        $query = $db->prepare('SELECT * FROM users WHERE email = ? AND isAdmin = true');
+        if (!$query) {
+            echo "Failed to prepare the admin check query: " . $db->error . "\n";
+            $this->response = [
+                'type' => 'AdminCheckResponse',
+                'status' => 'error',
+                'message' => 'Failed to prepare the search query.'
+            ];
+            return;
+        }
+        $query->bind_param("s", $email);
+        $query->execute();
+        $result = $query->get_result();
+        if (!$result) {
+            echo "Admin check query execution failed: " . $db->error . "\n";
+            return;
+        }
+        $num_rows = mysqli_num_rows($result);
+        echo "Number of rows found: " . $num_rows . "\n";
+        // Check if the user credentials are valid
+        if ($num_rows > 0) {
+            echo "Admin user found.\n";
+            $this->response = [
+                'type' => 'AdminCheckResponse',
+                'result' => 'true'
+            ];
+        } else{
+            echo "Admin user not found.\n";
+            $this->response = [
+                'type' => 'AdminCheckResponse',
+                'result' => 'false'
+            ];
+        }
+        $db->close();
     }
 
     /**

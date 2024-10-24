@@ -28,6 +28,10 @@ abstract class Registration {
                         <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="email" type="text" name="email" placeholder="Jane@test.com" required>
                     </div>
                     <div class="md:flex md:items-start mb-6">
+                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="phone">Phone Number</label>
+                        <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="phone" id="phone" name="phone" required minlength="10" maxlength="10" placeholder="0001112222"/>
+                    </div>
+                    <div class="md:flex md:items-start mb-6">
                         <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="password">Password</label>
                         <input class="appearance-none border-4 border-gray-500 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" id="pw" name="password" required minlength="8" />
                     </div>
@@ -56,10 +60,11 @@ abstract class Registration {
 
     private static function handleRegistration() {
         try{
-            if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirmPassword"])) {
+            if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirmPassword"]) && isset($_POST["phone"])) {
                 $email = filter_input(INPUT_POST,'email');
                 $password = filter_input(INPUT_POST,'password');
                 $confirm = filter_input(INPUT_POST,'confirmPassword');
+                $phone = filter_input(INPUT_POST, 'phone');
                 $hasError = false;
                 
                 if (empty($email)) {
@@ -70,28 +75,37 @@ abstract class Registration {
                 $email = sanitize_email($email);
                 //validate
                 if (!is_valid_email($email)) {
-                    echo ("Bad email");
+                    echo ("Please enter a valid email address");
                     $hasError = true;
                 }
                 if (empty($password)) {
-                    echo "empty password";
+                    echo "Please enter a password";
                     $hasError = true;
                 }
                 if (empty($confirm)) {
-                    echo ("empty confirm");
+                    echo ("Please confirm password");
+                    $hasError = true;
+                }
+                if (empty($phone)) {
+                    echo ("Please enter a phone number");
                     $hasError = true;
                 }
                 if (!is_valid_password($password)) {
-                    echo ("invalid pass");
+                    echo ("Password must be at least 8 characters and contain one upper case letter and one special character");
                     $hasError = true;
                 }
                 if ((strlen($password) > 0) && ($password !== $confirm)) {
-                    echo ("password and confirm must match");
+                    echo ("Password and confirm password must match");
                     $hasError = true;
                 }
                 error_log("error status:" . print_r($hasError));
                 if (!$hasError) {
-                    $json_message = json_encode(['type'=>'register_request', 'email' => $email, 'password' => $password]);
+                    $json_message = json_encode([
+                    'type'=>'register_request', 
+                    'email' => $email, 
+                    'password' => $password, 
+                    'phone' => $phone
+                ]);
                     $client = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
                     //error_log("sending " . print_r($json_message, true));
                     if($client->send_request($json_message, 'register_request')) {

@@ -8,7 +8,7 @@ namespace nba\src\admin\includes;
  */
 abstract class Admin {
 
-    private static false|\nba\shared\Session $session;
+    private false|\nba\shared\Session $session;
 
     
     /**
@@ -22,7 +22,29 @@ abstract class Admin {
     <html lang='en'>
 
         <head>
-            <?php echo \nba\src\lib\components\Head::displayHead(); ?> 
+            <?php echo \nba\src\lib\components\Head::displayHead(); 
+            echo \nba\src\lib\components\Nav::displayNav(); 
+            $session = \nba\src\lib\SessionHandler::getSession();
+        error_log("session" . $session . print_r($session, true));
+        if(!$session){
+            error_log("Admin paged access without valid session data");
+            header('Location: /login');
+            exit();
+        }
+        else {
+            error_log('Checking user for admin status');
+            /*checks admin status here*/
+            $request = ['type' => 'admin_check_request', 'email' => $session->getEmail()];
+            $rabbitClient = new \nba\rabbit\RabbitMQClient(__DIR__.'/../../../rabbit/host.ini', "Authentication");
+            $response = $rabbitClient->send_request(json_encode($request), 'application/json');
+            $responseData = json_decode($response, true);
+            $isAdmin = $responseData['result'];
+            if($isAdmin != true){
+                header('Location: /home');
+                exit();
+            } else{
+
+        ?>
         </head>
 
         <body>
@@ -34,6 +56,7 @@ abstract class Admin {
     </html>
 
     <?php
-    } //end of displayLogin()
-    
+    }
+    } //end of displayAdminPage()
+}
 }
