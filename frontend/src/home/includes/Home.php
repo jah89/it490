@@ -28,14 +28,18 @@ abstract class Home {
             exit();
         } else {
             $fullEmail = htmlspecialchars($session->getEmail(), ENT_QUOTES, 'UTF-8');
-            $endUname = strlen($fullEmail)- (strpos($fullEmail, '@'));
-            $uname =   substr($fullEmail, 0, $endUname);
+            $atPos = strpos($fullEmail, '@');
+            if ($atPos !== false) {
+                $uname = substr($fullEmail, 0, $atPos);
+            } else {
+                $uname = $fullEmail;
+            }
         }
         ?>
         <script>
         // Pass session data to JavaScript
-        const sessionUser = {
-            uname: <?php echo($uname);?> 
+        window.sessionUser = {
+            uname: <?php echo json_encode($uname);?> 
         }
     </script>
         </head>
@@ -65,13 +69,13 @@ abstract class Home {
             </div>
         </div>
             <?php
-            require __DIR__.'/../..lib//chat/chatFront.php';
+            require __DIR__.'/../../lib/chat/chatFront.php';
             ?>
             
             <a href="../../logout/" class="hover:text-3xl pb-20"> Logout</a>
         </body>
     </html>
-
+    <script src="chat.js"></script>
     <?php
     } //end of displayLogin()
     

@@ -4,6 +4,8 @@
  * source from https://www.geeksforgeeks.org/online-group-chat-application-using-php/
  */
 namespace nba\frontend\src\chat;
+use nba\src\lib\SessionHandler;
+$session = SessionHandler::getSession();
 ?>
 <html>
 <head>
@@ -23,14 +25,11 @@ namespace nba\frontend\src\chat;
         </div>
 
         <footer class="bg-purple-600 p-4 flex items-center justify-between">
-            <input class="w-2/5 p-2 rounded-md" type="text" id="uname" name="uname" placeholder="From" value="<?php $session->getEmail(); ?>" readonly>
+            <input class="w-2/5 p-2 rounded-md" type="text" id="uname" name="uname" placeholder="From" value="<?php echo htmlspecialchars($session->getEmail(),ENT_QUOTES, 'UTF-8'); ?>" readonly>
             <textarea id="msg" name="msg" rows="2" class="w-1/2 p-2 rounded-md ml-2" placeholder="Type your message"></textarea>
             <button id="sendMessage" class="w-20 p-2 bg-black text-white rounded-md cursor-pointer">Send</button>
         </footer>
     </main> 
 </div>
-
-<!-- Include JavaScript file -->
-<script src="chat.js"></script>
 </body>
 </html>

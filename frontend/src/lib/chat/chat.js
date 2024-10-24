@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /*Function to fetch chat history from the server*/
 function fetchChatHistory() {
-    fetch('../api/fetch_chat_history.php')  // Relative path to the API
+    fetch('../../api/fetch_chat_history.php')  // Relative path to the API
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -24,7 +24,7 @@ function fetchChatHistory() {
                 const messageDiv = document.createElement('div');
                 
                 // Differentiating the display of user messages
-                if (chat.uname === sessionUser.userId) {
+                if (chat.uname === sessionUser.uname) {
                     messageDiv.classList.add('bg-blue-400', 'text-white', 'p-2', 'rounded-md', 'mb-2', 'float-right', 'max-w-xs', 'clear-both');
                 } else {
                     messageDiv.classList.add('bg-green-400', 'text-white', 'p-2', 'rounded-md', 'mb-2', 'float-left', 'max-w-xs', 'clear-both');
