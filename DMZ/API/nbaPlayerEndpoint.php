@@ -9,7 +9,8 @@ $client = new rabbitMQClient("testRabbitMQ.ini","API");
 $curl = curl_init();
 
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://v2.nba.api-sports.io/players/statistics?id=75&season=2023", //need to specify season to get player stats
+    //CURLOPT_URL => "https://v2.nba.api-sports.io/players?country=USA", // gets all players for country USA
+	CURLOPT_URL => "https://v2.nba.api-sports.io/players?id=20", // gets all players for country USA
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_ENCODING => "",
 	CURLOPT_MAXREDIRS => 10,
@@ -33,7 +34,7 @@ if ($err) {
 } else {
 	
     $message = [
-        'type' => 'api_player_stats_request',
+        'type' => 'api_player_data_request',
         'data' => $response 
 
     ];
